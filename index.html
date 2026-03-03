@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Célula Yeshua — Escala 2026</title>
+  <meta name="description" content="Escala 2026 da Célula Yeshua — splash inicial com versículo aleatório; filtros por mês/função/pessoa; impressão; .ics; importação de Excel; logo personalizável." />
+  <style>
+    :root{
+      --bg: #0f172a;         /* slate-900 */
+      --panel: #111827;      /* gray-900 */
+      --muted: #94a3b8;      /* slate-400 */
+      --text: #e5e7eb;       /* gray-200 */
+      --brand: #22c55e;      /* green-500 */
+      --brand-2:#38bdf8;     /* sky-400 */
+      --chip:#1f2937;        /* gray-800 */
+      --chip-txt:#d1d5db;    /* gray-300 */
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 14px;
+      --accent:#7dd3fc;      /* sky-300 */
+      --corner-size: 56px;   /* imagem topo dir */
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f8fafc;        /* slate-50 */
+        --panel:#ffffff;
+        --muted:#475569;     /* slate-600 */
+        --text:#0f172a;
+        --chip:#f1f5f9;
+        --chip-txt:#0f172a;
+        --shadow: 0 8px 20px rgba(2,6,23,.08);
+      }
+    }
+
+    html,body{background:var(--bg); color:var(--text); margin:0; font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans',Arial,"Apple Color Emoji","Segoe UI Emoji";}
+
+    /* ===== Splash (tela inicial) ===== */
+    .intro{ position: fixed; inset:0; z-index: 50; display:grid; place-items:center; padding:18px; background: radial-gradient(1200px 600px at 60% -10%, rgba(34,197,94,.15), transparent), radial-gradient(1000px 600px at -10% 110%, rgba(56,189,248,.15), transparent), var(--bg); animation: fadeIn .4s ease; }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .intro-card{ max-width: 880px; width:100%; background: var(--panel); border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); border-radius: 18px; box-shadow: var(--shadow); display:grid; grid-template-columns: 1fr; overflow:hidden }
+    @media(min-width:880px){ .intro-card{ grid-template-columns: 42% 1fr } }
+    .intro-left{ position:relative; min-height:240px; background: linear-gradient(135deg, #064e3b, #0ea5e9); display:grid; place-items:center; }
+    .intro-left img{ width: 100%; height: 100%; object-fit: cover; }
+    .intro-right{ padding: 18px 18px 16px 18px; display:flex; flex-direction:column; gap:14px }
+    .intro-title{ font-size: clamp(22px, 3.6vw, 34px); font-weight: 900; letter-spacing:.4px }
+    .intro-verse{ background: color-mix(in oklab, var(--chip) 85%, transparent); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); border-radius: 14px; padding:12px 14px; }
+    .intro-verse .ref{ color: var(--muted); font-weight:700; margin-bottom:6px }
+    .intro-verse .txt{ font-size: clamp(14px, 1.8vw, 16px); line-height:1.45 }
+    .intro-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:6px }
+    .intro-btn{ background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#001b0b; border:0; padding:12px 16px; border-radius:999px; font-weight:800; cursor:pointer; box-shadow: var(--shadow); font-size:16px }
+    .intro-skip{ background:transparent; color:var(--accent); border:1px dashed color-mix(in oklab, var(--muted) 30%, transparent); padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer }
+    .intro-hidden{ animation: fadeOut .35s ease forwards }
+    @keyframes fadeOut { to{ opacity:0; visibility:hidden } }
+
+    header{ position:sticky; top:0; z-index:10; backdrop-filter: blur(8px); background: color-mix(in oklab, var(--bg) 85%, transparent); border-bottom: 1px solid color-mix(in oklab, var(--muted) 30%, transparent); }
+    .wrap{max-width:1120px; margin:auto; padding:18px 16px;}
+    .header-wrap{position:relative}
+    .brand{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .logo{ width:38px;height:38px; border-radius:10px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); display:grid; place-items:center; font-weight:800; color:#001b0b; box-shadow: var(--shadow); }
+    h1{font-size: clamp(20px,2.6vw,28px); margin:0}
+    .subtitle{color:var(--muted); font-size:14px}
+
+    .corner-img{ position:absolute; right:16px; top:12px; height: var(--corner-size); width:auto; object-fit:contain; border-radius:12px; box-shadow: var(--shadow); border:1px solid color-mix(in oklab, var(--muted) 30%, transparent); background: #ffffff10; }
+    @media (max-width:520px){ .corner-img{ height:44px; right:12px; top:10px } }
+
+    .controls{ display:grid; gap:10px; grid-template-columns: 1fr; margin-top:8px; }
+    .controls .row{display:flex; flex-wrap:wrap; gap:10px}
+    .controls label{ display:flex; align-items:center; gap:8px; background:var(--panel); padding:8px 10px; border-radius:12px; border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); }
+    select,input[type="search"]{ background:transparent; color:var(--text); border:0; outline:0; min-width:200px; }
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px}
+    .btn{ background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#001b0b; border:0; padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer; box-shadow: var(--shadow); }
+    .btn.secondary{ background: var(--panel); color: var(--text); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); }
+    .btn.link{ background: transparent; color: var(--accent); border:1px dashed color-mix(in oklab, var(--muted) 30%, transparent); }
+
+    main .section-title{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 0 6px; color:var(--muted); font-size:14px; }
+    .next-badge{background: #14532d; color:#dcfce7; padding:6px 10px; border-radius:999px; font-size:12px}
+    @media (prefers-color-scheme: light){ .next-badge{background:#ecfdf5; color:#065f46;} }
+
+    .grid{display:grid; grid-template-columns:1fr; gap:14px}
+    @media (min-width:760px){ .grid{grid-template-columns: 1fr 1fr} }
+    @media (min-width:1040px){ .grid{grid-template-columns: 1fr 1fr 1fr} }
+
+    .card{ background: var(--panel); border-radius: var(--radius); padding:14px 14px 10px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px; min-height: 160px; }
+    .date{ display:flex; align-items:center; justify-content:space-between; gap:8px }
+    .date .left{display:flex; align-items:baseline; gap:10px}
+    .dow{color:var(--muted); font-weight:600}
+    .day{font-size: clamp(22px, 3.2vw, 28px); font-weight:900; letter-spacing:.5px}
+    .month{color:var(--muted); font-weight:600}
+
+    .roles{display:grid; gap:8px}
+    .role{display:flex; align-items:flex-start; gap:8px}
+    .role .title{min-width:170px; font-weight:700; color:var(--muted)}
+    .chips{display:flex; gap:6px; flex-wrap:wrap}
+    .chip{background: var(--chip); color: var(--chip-txt); padding:6px 10px; border-radius:999px; font-size: 12px}
+
+    .card .foot{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px}
+    .card .foot .btn{padding:8px 10px; font-size:12px}
+    .empty{padding:20px; border:1px dashed color-mix(in oklab, var(--muted) 35%, transparent); border-radius:12px; color:var(--muted); text-align:center}
+
+    .panel{background: var(--panel); border-radius: var(--radius); padding:14px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); box-shadow: var(--shadow);}
+    .panel h3{margin:0 0 10px 0; font-size:16px; color:var(--muted)}
+    .names{display:grid; grid-template-columns: 1fr; gap:10px}
+    @media (min-width:700px){ .names{grid-template-columns: 1fr 1fr} }
+    .name-item{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; background: color-mix(in oklab, var(--chip) 85%, transparent); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); padding:10px; border-radius:12px;}
+    .name-item .title{font-weight:800}
+    .name-item .meta{color:var(--muted); font-size:12px}
+    .mini-dates{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px}
+    .mini{background: var(--chip); color: var(--chip-txt); padding:4px 8px; border-radius:999px; font-size:11px}
+    .name-actions{display:flex; align-items:center; gap:6px}
+
+    @media print{ .intro{ display:none !important } header, .actions{display:none !important} body{background:#fff; color:#000} .card{box-shadow:none; border:1px solid #ddd} .grid{grid-template-columns: 1fr 1fr} }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.js" defer></script>
+</head>
+<body>
+<!-- ========= SPLASH ========= -->
+<div id="intro" class="intro" role="dialog" aria-labelledby="introTitle" aria-describedby="introVerse">
+  <div class="intro-card">
+    <div class="intro-left">
+      <img id="introImg" alt="Imagem da Célula Yeshua" />
+    </div>
+    <div class="intro-right">
+      <div class="intro-title" id="introTitle">Célula Yeshua</div>
+      <div class="intro-verse" id="introVerse">
+        <div class="ref" id="vRef">Carregando referência…</div>
+        <div class="txt" id="vTxt">Carregando versículo…</div>
+        <div style="color:var(--muted); font-size:12px; margin-top:6px">Texto devocional/paráfrase. Substitua pelo texto da sua tradução autorizada, se desejar.</div>
+      </div>
+      <div class="intro-actions">
+        <button id="btnEntrar" class="intro-btn">Clique aqui para acessar a escala</button>
+        <button id="btnTrocarVerso" class="intro-skip">Trocar versículo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="wrap header-wrap">
+    <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?>
+      <svg xmlns='http://www.w3.org/2000/svg' width='160' height='64'>
+        <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%2322c55e'/><stop offset='100%' stop-color='%2338bdf8'/></linearGradient></defs>
+        <rect x='0' y='0' width='160' height='64' rx='12' ry='12' fill='url(%23g)'/>
+        <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28' font-family='Segoe UI, Roboto, sans-serif' fill='%23001b0b' font-weight='800'>YESHUA</text>
+      </svg>">
+
+    <div class="brand">
+      <div class="logo" aria-hidden="true">Y</div>
+      <div>
+        <h1>Célula Yeshua — Escala 2026</h1>
+        <div class="subtitle">Agenda e responsabilidades por encontro (mar–abr/2026) • Importação de Excel</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="row">
+        <label title="Filtrar por mês">
+          <span>🗓️ Mês</span>
+          <select id="filtroMes" aria-label="Filtrar por mês"></select>
+        </label>
+        <label title="Filtrar por função">
+          <span>🧩 Função</span>
+          <select id="filtroFuncao" aria-label="Filtrar por função">
+            <option value="todas">Todas</option>
+            <option value="oracaoAbertura">Oração de Abertura</option>
+            <option value="quebraGelo">Quebra‑Gelo</option>
+            <option value="oferta">Oferta</option>
+            <option value="lanche">Lanche</option>
+            <option value="cuidandoCriancas">Cuidando das Crianças</option>
+            <option value="oracaoDasCriancas">Oração das Crianças</option>
+          </select>
+        </label>
+        <label title="Filtrar por pessoa">
+          <span>👤 Pessoa</span>
+          <input id="filtroPessoa" list="listaPessoas" type="search" placeholder="Digite um nome…" aria-label="Filtrar por pessoa"/>
+          <datalist id="listaPessoas"></datalist>
+        </label>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btnLimpar">Limpar filtros</button>
+        <button class="btn secondary" id="btnImprimir" title="Imprimir ou salvar em PDF">Imprimir / PDF</button>
+        <button class="btn link" id="btnImportar">📥 Importar Excel</button>
+        <input id="inpExcel" type="file" accept=".xlsx,.xls" hidden />
+        <button class="btn link" id="btnTrocarImg">🖼️ Trocar imagem</button>
+        <input id="inpImg" type="file" accept="image/*" hidden />
+      </div>
+      <div style="color:var(--muted); font-size:12px">Dica: você pode trocar a imagem do topo e ela fica salva neste navegador. A tela inicial usa a mesma imagem.</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="section-title">
+    <div>Resultados</div>
+    <div class="next-badge" id="proximoEncontroBadge" hidden>Próximo encontro: <span id="proximoEncontroTxt"></span></div>
+  </div>
+
+  <section id="resumoFuncao" class="panel" hidden>
+    <h3 id="resumoTitulo">Resumo</h3>
+    <div class="names" id="listaNomes"></div>
+  </section>
+
+  <section id="lista" class="grid" aria-live="polite"></section>
+  <div id="vazio" class="empty" hidden>Nenhum encontro encontrado com os filtros aplicados.</div>
+</main>
+
+<script>
+/******** 0) VERSOS (paráfrases devocionais + referências) ********/
+// Observação: para exibir o texto oficial da tradução usada pela sua igreja,
+// substitua as entradas abaixo pelos versos autorizados.
+const versos = [
+  { ref: 'Salmo 23:1', txt: 'O SENHOR é o meu pastor; em Cristo encontro tudo o que preciso. (paráfrase)' },
+  { ref: 'Filipenses 4:13', txt: 'Posso avançar em todas as coisas, porque o Senhor me fortalece. (paráfrase)' },
+  { ref: 'Provérbios 3:5-6', txt: 'Confie no SENHOR de todo o coração; Ele endireita os seus caminhos. (paráfrase)' },
+  { ref: 'Isaías 41:10', txt: 'Não tenha medo: Deus está com você e o sustenta com Sua mão. (paráfrase)' },
+  { ref: 'Mateus 5:16', txt: 'Que a sua luz brilhe para que vejam suas boas obras e glorifiquem a Deus. (paráfrase)' },
+  { ref: 'Romanos 8:28', txt: 'Deus faz cooperar para o bem aqueles que O amam. (paráfrase)' },
+  { ref: 'Josué 1:9', txt: 'Seja forte e corajoso: o SENHOR está com você por onde for. (paráfrase)' },
+  { ref: 'Salmo 121:2', txt: 'O meu socorro vem do SENHOR, Criador do céu e da terra. (paráfrase)' }
+];
+
+/******** 1) DADOS INICIAIS (inclui Oração das Crianças) ********/
+let escala = [
+  { data: "2026-03-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Tamires", oferta: "Priscila", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
+  { data: "2026-03-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Samuel", oferta: "Nanda", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Samuel" } },
+  { data: "2026-03-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Carol", oferta: "Daniel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Carol" } },
+  { data: "2026-03-31", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Marcelo", oferta: "Tamires", lanche: ["Charles","Veronica","Daniel"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Marcelo" } },
+  { data: "2026-04-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Ingrid", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Luana" } },
+  { data: "2026-04-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Medina","Carol","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Nanda" } },
+  { data: "2026-04-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Daniel" } },
+  { data: "2026-04-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Charles","Veronica","Nanda"], cuidandoCriancas: "Veronica", oracaoDasCriancas: "Priscila" } }
+];
+
+/******** 2) UTILITÁRIOS E ESTADO ********/
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+const els = {
+  intro: $('#intro'), introImg: $('#introImg'), vRef: $('#vRef'), vTxt: $('#vTxt'), btnEntrar: $('#btnEntrar'), btnTrocarVerso: $('#btnTrocarVerso'),
+  filtroMes: $('#filtroMes'), filtroFuncao: $('#filtroFuncao'), filtroPessoa: $('#filtroPessoa'), lista: $('#lista'), vazio: $('#vazio'), proximoBadge: $('#proximoEncontroBadge'), proximoTxt: $('#proximoEncontroTxt'), resumoFuncao: $('#resumoFuncao'), resumoTitulo: $('#resumoTitulo'), listaNomes: $('#listaNomes'), btnImportar: $('#btnImportar'), inpExcel: $('#inpExcel'), btnTrocarImg: $('#btnTrocarImg'), inpImg: $('#inpImg'), cornerImg: $('#cornerImg'),
+};
+
+const fmtDate = (iso) => { const d = new Date(iso+"T00:00:00"); const dow = new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(d); const dm = new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit'}).format(d); const y  = d.getFullYear(); return { d, dow, dm, y, iso }; };
+const unique = (arr) => [...new Set(arr)];
+function getPessoasUnicas(){
+  return unique(escala.flatMap(e => { const f=e.funcoes; return [f.oracaoAbertura, f.quebraGelo, f.oferta, f.cuidandoCriancas, f.oracaoDasCriancas, ...(Array.isArray(f.lanche)?f.lanche:[f.lanche].filter(Boolean))].filter(Boolean); })).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+}
+function contemPessoa(encontro, pessoa){ if(!pessoa) return true; const f=encontro.funcoes; const nomes=[f.oracaoAbertura,f.quebraGelo,f.oferta,f.cuidandoCriancas,f.oracaoDasCriancas,...(Array.isArray(f.lanche)?f.lanche:[f.lanche].filter(Boolean))].map(n=>(n||'').toLowerCase().trim()); return nomes.some(n => n.includes(pessoa.toLowerCase())); }
+function resumoFuncoes(e){ const f=e.funcoes; const lanche=Array.isArray(f.lanche)? f.lanche.join(', ') : (f.lanche||''); return [`• Oração de Abertura: ${f.oracaoAbertura}`,`• Quebra‑Gelo: ${f.quebraGelo}`,`• Oferta: ${f.oferta}`,`• Lanche: ${lanche}`,`• Cuidando das Crianças: ${f.cuidandoCriancas}`,`• Oração das Crianças: ${f.oracaoDasCriancas||'—'}`].join('\n'); }
+
+function uuid(){ try{ return crypto.randomUUID(); }catch{ return Math.random().toString(36).slice(2)+'-'+Date.now(); } }
+function baixarICS(encontro){ const { d }=fmtDate(encontro.data); const start=new Date(d); start.setHours(20,0,0,0); const end=new Date(d); end.setHours(21,0,0,0); const dt=x=> x.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z'; const resumo=`Célula Yeshua — ${start.toLocaleDateString('pt-BR')}`; const linhas=['BEGIN:VCALENDAR','VERSION:2.0','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',`UID:${uuid()}@celula-yeshua`,`DTSTAMP:${dt(new Date())}`,`DTSTART:${dt(start)}`,`DTEND:${dt(end)}`,`SUMMARY:${resumo}`,`DESCRIPTION:${resumo}\n`+resumoFuncoes(encontro).replace(/\n/g,'\\n'),'END:VEVENT','END:VCALENDAR']; const blob=new Blob([linhas.join('\r\n')],{type:'text/calendar'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`celula-yeshua_${encontro.data}.ics`; a.click(); URL.revokeObjectURL(a.href); }
+function copiarResumo(encontro){ const { dow, dm, y }=fmtDate(encontro.data); const texto=`Célula Yeshua — ${dow}, ${dm}/${y}\n`+resumoFuncoes(encontro); navigator.clipboard?.writeText(texto).then(()=>alert('Resumo copiado! Agora é só colar no WhatsApp ✅')).catch(()=>prompt('Copie manualmente:', texto)); }
+
+/******** 3) SPLASH: imagem + versículo ********/
+function carregarImagemSalva(){ try{ const saved=localStorage.getItem('cornerImageDataUrl'); if(saved){ els.cornerImg.src=saved; els.introImg.src=saved; } else { els.introImg.src = els.cornerImg.getAttribute('src'); } }catch{ els.introImg.src = els.cornerImg.getAttribute('src'); } }
+function sortearVerso(){ const i = Math.floor(Math.random()*versos.length); const v = versos[i]; els.vRef.textContent = v.ref; els.vTxt.textContent = v.txt; }
+
+/******** 4) RENDERIZAÇÃO ********/
+function popularMeses(){ const meses=unique(escala.map(e=>e.data.slice(0,7))).sort(); els.filtroMes.innerHTML=['tudo',...meses].map(v=> v==='tudo'? '<option value="tudo">Todos</option>' : (([y,m]=v.split('-')), `<option value="${v}">${new Date(Number(y),Number(m)-1,1).toLocaleDateString('pt-BR',{month:'long'})} / ${y}</option>`)).join(''); if(!els.filtroMes.value) els.filtroMes.value=meses[0]??'tudo'; }
+function popularPessoas(){ $('#listaPessoas').innerHTML=getPessoasUnicas().map(p=>`<option value="${p}">`).join(''); }
+function renderResumoPorFuncao(encontros, funcao){ const mapa=new Map(); for(const e of encontros){ let nomes=[]; if(funcao==='lanche') nomes=Array.isArray(e.funcoes.lanche)? e.funcoes.lanche : (e.funcoes.lanche? [e.funcoes.lanche]:[]); else nomes=[ e.funcoes[funcao] ].filter(Boolean); for(const n of nomes){ if(!n) continue; if(!mapa.has(n)) mapa.set(n, []); mapa.get(n).push(e.data); } } const items=[...mapa.entries()].sort((a,b)=>{ const d=b[1].length-a[1].length; return d||a[0].localeCompare(b[0],'pt-BR'); }); els.listaNomes.innerHTML= items.map(([nome,datas])=>{ const datasFmt=datas.sort().map(d=>{ const {dm,y}=fmtDate(d); return `<span class="mini">${dm}/${y}</span>`; }).join(''); return `<div class=\"name-item\"><div><div class=\"title\">${nome}</div><div class=\"meta\">${datas.length} vez(es)</div><div class=\"mini-dates\">${datasFmt}</div></div><div class=\"name-actions\"><button class=\"btn secondary\" data-filtrar-nome=\"${encodeURIComponent(nome)}\">Ver encontros</button></div></div>`; }).join('') || '<div class="empty">Sem nomes para esta função e filtros selecionados.</div>'; $$('[data-filtrar-nome]').forEach(btn=> btn.addEventListener('click', ()=>{ els.filtroPessoa.value=decodeURIComponent(btn.getAttribute('data-filtrar-nome')); render(); })); }
+function render(){ const mes=els.filtroMes.value; const funcao=els.filtroFuncao.value; const pessoa=els.filtroPessoa.value.trim(); const base=escala.filter(e=> (mes==='tudo'||e.data.startsWith(mes)) && contemPessoa(e,pessoa)); if(funcao!=='todas'){ els.resumoFuncao.hidden=false; const tit={oracaoAbertura:'Oração de Abertura',quebraGelo:'Quebra‑Gelo',oferta:'Oferta',lanche:'Lanche',cuidandoCriancas:'Cuidando das Crianças',oracaoDasCriancas:'Oração das Crianças'}[funcao]||funcao; const [yy,mm]=(mes||'').split('-'); els.resumoTitulo.innerHTML=`Participantes na função <b>${tit}</b>${mes!=='tudo'? ` — ${new Date(Number(yy),Number(mm)-1,1).toLocaleDateString('pt-BR',{month:'long'})}/${yy}`:''}${pessoa? ` — filtrado por \"${pessoa}\"`:''}`; renderResumoPorFuncao(base, funcao); } else { els.resumoFuncao.hidden=true; }
+  const encontros = base.filter(e=>{ if(funcao==='todas') return true; const f=e.funcoes; if(funcao==='lanche') return (Array.isArray(f.lanche)?f.lanche:[f.lanche]).filter(Boolean).length>0; return Boolean(f[funcao]); }).sort((a,b)=> a.data.localeCompare(b.data));
+  els.lista.innerHTML=''; if(funcao!=='todas' && !pessoa){ els.vazio.hidden = true; } else if(!encontros.length){ els.vazio.hidden=false; } else { els.vazio.hidden=true; for(const e of encontros){ const { d,dow,dm,y }=fmtDate(e.data); const f=e.funcoes; const lanche=Array.isArray(f.lanche)? f.lanche : (f.lanche? [f.lanche]:[]); const card=document.createElement('article'); card.className='card'; card.innerHTML=`<div class=\"date\"><div class=\"left\"><div class=\"day\">${String(d.getDate()).padStart(2,'0')}</div><div><div class=\"dow\">${dow}</div><div class=\"month\">${dm}/${y}</div></div></div><div class=\"type chip\">Célula</div></div><div class=\"roles\"><div class=\"role\"><div class=\"title\">Oração de Abertura</div><div class=\"chips\"><span class=\"chip\">${f.oracaoAbertura}</span></div></div><div class=\"role\"><div class=\"title\">Quebra‑Gelo</div><div class=\"chips\"><span class=\"chip\">${f.quebraGelo}</span></div></div><div class=\"role\"><div class=\"title\">Oferta</div><div class=\"chips\"><span class=\"chip\">${f.oferta}</span></div></div><div class=\"role\"><div class=\"title\">Lanche</div><div class=\"chips\">${lanche.map(n=>`<span class=\"chip\">${n}</span>`).join('')||'<span class=\"chip\">—</span>'}</div></div><div class=\"role\"><div class=\"title\">Cuidando das Crianças</div><div class=\"chips\"><span class=\"chip\">${f.cuidandoCriancas}</span></div></div><div class=\"role\"><div class=\"title\">Oração das Crianças</div><div class=\"chips\"><span class=\"chip\">${f.oracaoDasCriancas||'—'}</span></div></div></div><div class=\"foot\"><div style=\"display:flex; gap:8px; flex-wrap:wrap\"><button class=\"btn secondary\" data-acao=\"copiar\">Copiar resumo</button><button class=\"btn secondary\" data-acao=\"compartilhar\">Compartilhar</button></div><button class=\"btn\" data-acao=\"ics\">Adicionar ao calendário</button></div>`; card.querySelector('[data-acao="ics"]').addEventListener('click', ()=> baixarICS(e)); card.querySelector('[data-acao="copiar"]').addEventListener('click', ()=> copiarResumo(e)); card.querySelector('[data-acao="compartilhar"]').addEventListener('click', async ()=>{ const texto=`Célula Yeshua — ${dow}, ${dm}/${y}\n`+resumoFuncoes(e); if(navigator.share){ try{ await navigator.share({title:'Célula Yeshua', text:texto}); }catch{} } else { copiarResumo(e); } }); els.lista.appendChild(card); } }
+  destacarProximo(); }
+
+function destacarProximo(){ const hoje=new Date(); hoje.setHours(0,0,0,0); const proximos=escala.map(e=>({...e,d:new Date(e.data+"T00:00:00")})).filter(x=>x.d>=hoje).sort((a,b)=>a.data.localeCompare(b.data)); if(proximos.length){ const { d }=proximos[0]; els.proximoTxt.textContent=d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}); els.proximoBadge.hidden=false; } else { els.proximoBadge.hidden=true; } }
+
+/******** 5) IMPORTAÇÃO DE EXCEL ********/
+function normalizarCabecalho(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,''); }
+function excelDateToISO(n){ const epoch=new Date(Date.UTC(1899,11,30)); const ms=n*86400000; const d=new Date(epoch.getTime()+ms); const yyyy=d.getUTCFullYear(); const mm=String(d.getUTCMonth()+1).padStart(2,'0'); const dd=String(d.getUTCDate()).padStart(2,'0'); return `${yyyy}-${mm}-${dd}`; }
+function parseStrDate(s){ const m=String(s).match(/(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/); if(!m) return null; let[_,a,b,c]=m; a=+a; b=+b; c=String(c).length===2? +((+c>50?'19':'20')+c): +c; let day,mon; if(a>12){day=a;mon=b;} else if(b>12){day=b;mon=a;} else {day=a;mon=b;} const yyyy=c, mm=String(mon).padStart(2,'0'), dd=String(day).padStart(2,'0'); return `${yyyy}-${mm}-${dd}`; }
+async function importarExcel(file){ if(!window.XLSX){ alert('Biblioteca XLSX não carregou. Verifique a conexão e tente novamente.'); return; } const buf=await file.arrayBuffer(); const wb=XLSX.read(buf,{type:'array'}); const ws=wb.Sheets[wb.SheetNames[0]]; const rows=XLSX.utils.sheet_to_json(ws,{defval:'',raw:true}); if(!rows.length){ alert('Arquivo sem linhas.'); return; } const first=rows[0]; const keys=Object.keys(first); const norm=Object.fromEntries(keys.map(k=>[k,normalizarCabecalho(k)])); const map={}; for(const k of keys){ const n=norm[k]; if(['data','date'].includes(n)) map.data=k; if(['oracaodeabertura','oracaoabertura','oracaoinicial'].includes(n)) map.oa=k; if(['quebragelo','quebraogelo','icebreaker'].includes(n)) map.qg=k; if(['oferta','coleta','dizimo','dizimosofertas'].includes(n)) map.of=k; if(['lanche','lanches','coffee','coffeebreak'].includes(n)) map.ln=k; if(['cuidandodascriancas','criancas','kids','infantil'].includes(n)) map.cc=k; if(['oracaodascriancas','oracaocriancas','oracaokids','oracaodascrianças'].includes(n)) map.oc=k; }
+  if(!map.data){ alert('Coluna de Data não encontrada.'); return; }
+  let novos=0; for(const r of rows){ const vData=r[map.data]; if(vData==null||vData==='') continue; let iso; if(typeof vData==='number') iso=excelDateToISO(vData); else iso=parseStrDate(vData)|| String(vData).slice(0,10); if(!/\d{4}-\d{2}-\d{2}/.test(iso)) continue; const obj={ data: iso, tipo:'Célula', observacoes:'', funcoes:{ oracaoAbertura:(r[map.oa]||'').toString().trim(), quebraGelo:(r[map.qg]||'').toString().trim(), oferta:(r[map.of]||'').toString().trim(), lanche:(r[map.ln]||'').toString().split(',').map(x=>x.trim()).filter(Boolean), cuidandoCriancas:(r[map.cc]||'').toString().trim(), oracaoDasCriancas:(r[map.oc]||'').toString().trim() } }; const idx=escala.findIndex(x=>x.data===obj.data); if(idx>=0){ escala[idx]=obj; } else { escala.push(obj); novos++; } }
+  escala.sort((a,b)=>a.data.localeCompare(b.data)); popularMeses(); popularPessoas(); render(); alert(`${novos} novo(s) encontro(s) importado(s) com sucesso!`); }
+
+/******** 6) IMAGEM (persistência local) ********/
+els.btnTrocarImg.addEventListener('click', ()=> els.inpImg.click());
+els.inpImg.addEventListener('change', (e)=>{ const f=e.target.files?.[0]; if(!f) return; const reader=new FileReader(); reader.onload=()=>{ const dataUrl=reader.result; els.cornerImg.src=dataUrl; els.introImg.src=dataUrl; try{ localStorage.setItem('cornerImageDataUrl', dataUrl); }catch{} }; reader.readAsDataURL(f); e.target.value=''; });
+
+/******** 7) EVENTOS GERAIS ********/
+['change','input'].forEach(evt=> els.filtroMes.addEventListener(evt, render));
+['change','input'].forEach(evt=> els.filtroFuncao.addEventListener(evt, render));
+['change','input'].forEach(evt=> els.filtroPessoa.addEventListener(evt, render));
+$('#btnLimpar').addEventListener('click', ()=>{ els.filtroMes.value='tudo'; els.filtroFuncao.value='todas'; els.filtroPessoa.value=''; render(); });
+$('#btnImprimir').addEventListener('click', ()=> window.print());
+els.btnImportar.addEventListener('click', ()=> els.inpExcel.click());
+els.inpExcel.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(f) importarExcel(f); e.target.value=''; });
+
+/******** 8) START ********/
+carregarImagemSalva(); sortearVerso();
+els.btnTrocarVerso.addEventListener('click', sortearVerso);
+els.btnEntrar.addEventListener('click', ()=>{ els.intro.classList.add('intro-hidden'); setTimeout(()=>{ els.intro.remove(); }, 380); });
+
+popularMeses(); popularPessoas(); render();
+</script>
+</body>
+</html>
