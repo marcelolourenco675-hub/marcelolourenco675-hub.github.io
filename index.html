@@ -215,13 +215,13 @@
     }
   </style>
 
-  https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.jsscript>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.js" defer></script>
 </head>
 <body>
   <div id="intro" class="intro" role="dialog" aria-labelledby="introTitle" aria-describedby="introVerse">
     <div class="intro-card">
       <div class="intro-left">
-        logo-yeshua.jpg
+        <img id="introImg" src="logo-yeshua.jpg" alt="Imagem da Célula Yeshua"/>
       </div>
       <div class="intro-right">
         <div class="intro-title" id="introTitle">Célula Yeshua</div>
@@ -242,7 +242,7 @@
 
   <header>
     <div class="wrap header-wrap">
-      logo-yeshua.jpg
+      <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="logo-yeshua.jpg"/>
 
       <div class="brand">
         <div class="logo" aria-hidden="true">Y</div>
@@ -328,704 +328,56 @@
     ];
 
     let escala = [
-      {
-            "data": "2026-03-10",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Samuel",
-                  "quebraGelo": "Tamires",
-                  "oferta": "Priscila",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Tamires"
-            }
-      },
-      {
-            "data": "2026-03-17",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Marcelo",
-                  "quebraGelo": "Samuel",
-                  "oferta": "Nanda",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Priscila",
-                  "oracaoDasCriancas": "Samuel"
-            }
-      },
-      {
-            "data": "2026-03-24",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Tamires",
-                  "quebraGelo": "Carol",
-                  "oferta": "Daniel",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Tamires"
-                  ],
-                  "cuidandoCriancas": "Tamires",
-                  "oracaoDasCriancas": "Carol"
-            }
-      },
-      {
-            "data": "2026-03-31",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Ingrid",
-                  "quebraGelo": "Marcelo",
-                  "oferta": "Tamires",
-                  "lanche": [
-                        "Charles",
-                        "Veronica",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Luana",
-                  "oracaoDasCriancas": "Marcelo"
-            }
-      },
-      {
-            "data": "2026-04-07",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Priscila",
-                  "quebraGelo": "Luana",
-                  "oferta": "Ingrid",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Ingrid",
-                  "oracaoDasCriancas": "Luana"
-            }
-      },
-      {
-            "data": "2026-04-14",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Medina",
-                  "quebraGelo": "Nanda",
-                  "oferta": "Luana",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Tamires"
-                  ],
-                  "cuidandoCriancas": "Carol",
-                  "oracaoDasCriancas": "Nanda"
-            }
-      },
-      {
-            "data": "2026-04-21",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Luana",
-                  "quebraGelo": "Daniel",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Daniel"
-            }
-      },
-      {
-            "data": "2026-04-28",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Nanda",
-                  "quebraGelo": "Priscila",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Charles",
-                        "Veronica",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Veronica",
-                  "oracaoDasCriancas": "Priscila"
-            }
-      },
-      {
-            "data": "2026-05-12",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Ingrid",
-                  "quebraGelo": "Luana",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Luana"
-            }
-      },
-      {
-            "data": "2026-05-19",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Medina",
-                  "quebraGelo": "Samuel",
-                  "oferta": "Carol",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Tamires",
-                  "oracaoDasCriancas": "Samuel"
-            }
-      },
-      {
-            "data": "2026-05-26",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Daniel",
-                  "quebraGelo": "Ingrid",
-                  "oferta": "Luana",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Luana",
-                  "oracaoDasCriancas": "Ingrid"
-            }
-      },
-      {
-            "data": "2026-06-02",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Marcelo",
-                  "quebraGelo": "Priscila",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Verônica",
-                        "Charles",
-                        "Tamires"
-                  ],
-                  "cuidandoCriancas": "Carol",
-                  "oracaoDasCriancas": "Priscila"
-            }
-      },
-      {
-            "data": "2026-06-09",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Samuel",
-                  "quebraGelo": "Daniel",
-                  "oferta": "Ingrid",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Verônica",
-                  "oracaoDasCriancas": "Daniel"
-            }
-      },
-      {
-            "data": "2026-06-16",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Luana",
-                  "quebraGelo": "Marcelo",
-                  "oferta": "Carol",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Priscila",
-                  "oracaoDasCriancas": "Marcelo"
-            }
-      },
-      {
-            "data": "2026-06-23",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Tamires",
-                  "quebraGelo": "Medina",
-                  "oferta": "Samuel",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Ingrid",
-                  "oracaoDasCriancas": "Medina"
-            }
-      },
-      {
-            "data": "2026-06-30",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Nanda",
-                  "quebraGelo": "Ingrid",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Ingrid"
-            }
-      },
-      {
-            "data": "2026-07-07",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Carol",
-                  "quebraGelo": "Tamires",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Verônica",
-                        "Charles",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Tamires",
-                  "oracaoDasCriancas": "Tamires"
-            }
-      },
-      {
-            "data": "2026-07-14",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Samuel",
-                  "quebraGelo": "Nanda",
-                  "oferta": "Luana",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Luana",
-                  "oracaoDasCriancas": "Nanda"
-            }
-      },
-      {
-            "data": "2026-07-21",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Marcelo",
-                  "quebraGelo": "Carol",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Carol",
-                  "oracaoDasCriancas": "Carol"
-            }
-      },
-      {
-            "data": "2026-07-28",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Daniel",
-                  "quebraGelo": "Samuel",
-                  "oferta": "Ingrid",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Verônica",
-                  "oracaoDasCriancas": "Samuel"
-            }
-      },
-      {
-            "data": "2026-08-04",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Priscila",
-                  "quebraGelo": "Luana",
-                  "oferta": "Carol",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Priscila",
-                  "oracaoDasCriancas": "Luana"
-            }
-      },
-      {
-            "data": "2026-08-11",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Medina",
-                  "quebraGelo": "Marcelo",
-                  "oferta": "Samuel",
-                  "lanche": [
-                        "Verônica",
-                        "Charles",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Ingrid",
-                  "oracaoDasCriancas": "Marcelo"
-            }
-      },
-      {
-            "data": "2026-08-18",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Ingrid",
-                  "quebraGelo": "Priscila",
-                  "oferta": "Luana",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Priscila"
-            }
-      },
-      {
-            "data": "2026-08-25",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Tamires",
-                  "quebraGelo": "Daniel",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Tamires",
-                  "oracaoDasCriancas": "Daniel"
-            }
-      },
-      {
-            "data": "2026-09-01",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Samuel",
-                  "quebraGelo": "Medina",
-                  "oferta": "Ingrid",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Tamires"
-                  ],
-                  "cuidandoCriancas": "Luana",
-                  "oracaoDasCriancas": "Medina"
-            }
-      },
-      {
-            "data": "2026-09-08",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Luana",
-                  "quebraGelo": "Carol",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Carol",
-                  "oracaoDasCriancas": "Carol"
-            }
-      },
-      {
-            "data": "2026-09-15",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Nanda",
-                  "quebraGelo": "Samuel",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Verônica",
-                  "oracaoDasCriancas": "Samuel"
-            }
-      },
-      {
-            "data": "2026-09-22",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Priscila",
-                  "quebraGelo": "Tamires",
-                  "oferta": "Carol",
-                  "lanche": [
-                        "Verônica",
-                        "Charles",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Priscila",
-                  "oracaoDasCriancas": "Tamires"
-            }
-      },
-      {
-            "data": "2026-09-29",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Marcelo",
-                  "quebraGelo": "Medina",
-                  "oferta": "Samuel",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Ingrid",
-                  "oracaoDasCriancas": "Medina"
-            }
-      },
-      {
-            "data": "2026-10-06",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Ingrid",
-                  "quebraGelo": "Luana",
-                  "oferta": "Carol",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Luana"
-            }
-      },
-      {
-            "data": "2026-10-13",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Daniel",
-                  "quebraGelo": "Marcelo",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Tamires",
-                  "oracaoDasCriancas": "Marcelo"
-            }
-      },
-      {
-            "data": "2026-10-20",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Samuel",
-                  "quebraGelo": "Ingrid",
-                  "oferta": "Luana",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Luana",
-                  "oracaoDasCriancas": "Ingrid"
-            }
-      },
-      {
-            "data": "2026-10-27",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Tamires",
-                  "quebraGelo": "Priscila",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Verônica",
-                        "Charles",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Carol",
-                  "oracaoDasCriancas": "Priscila"
-            }
-      },
-      {
-            "data": "2026-11-03",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Medina",
-                  "quebraGelo": "Nanda",
-                  "oferta": "Samuel",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Tamires"
-                  ],
-                  "cuidandoCriancas": "Verônica",
-                  "oracaoDasCriancas": "Nanda"
-            }
-      },
-      {
-            "data": "2026-11-10",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Carol",
-                  "quebraGelo": "Luana",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Priscila",
-                  "oracaoDasCriancas": "Luana"
-            }
-      },
-      {
-            "data": "2026-11-17",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Samuel",
-                  "quebraGelo": "Medina",
-                  "oferta": "Ingrid",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Ingrid",
-                  "oracaoDasCriancas": "Medina"
-            }
-      },
-      {
-            "data": "2026-11-24",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Nanda",
-                  "quebraGelo": "Tamires",
-                  "oferta": "Carol",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Nanda",
-                  "oracaoDasCriancas": "Tamires"
-            }
-      },
-      {
-            "data": "2026-12-01",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Marcelo",
-                  "quebraGelo": "Daniel",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Verônica",
-                        "Charles",
-                        "Nanda"
-                  ],
-                  "cuidandoCriancas": "Tamires",
-                  "oracaoDasCriancas": "Daniel"
-            }
-      },
-      {
-            "data": "2026-12-08",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Ingrid",
-                  "quebraGelo": "Samuel",
-                  "oferta": "Luana",
-                  "lanche": [
-                        "Marcelo",
-                        "Luana",
-                        "Priscila"
-                  ],
-                  "cuidandoCriancas": "Luana",
-                  "oracaoDasCriancas": "Samuel"
-            }
-      },
-      {
-            "data": "2026-12-15",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Carol",
-                  "quebraGelo": "Marcelo",
-                  "oferta": "Medina",
-                  "lanche": [
-                        "Colaborativo"
-                  ],
-                  "cuidandoCriancas": "Carol",
-                  "oracaoDasCriancas": "Marcelo"
-            }
-      },
-      {
-            "data": "2026-12-22",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Daniel",
-                  "quebraGelo": "Nanda",
-                  "oferta": "Samuel",
-                  "lanche": [
-                        "Samuel",
-                        "Ingrid",
-                        "Tamires"
-                  ],
-                  "cuidandoCriancas": "Verônica",
-                  "oracaoDasCriancas": "Nanda"
-            }
-      },
-      {
-            "data": "2026-12-29",
-            "tipo": "Célula",
-            "observacoes": "",
-            "funcoes": {
-                  "oracaoAbertura": "Luana",
-                  "quebraGelo": "Priscila",
-                  "oferta": "Marcelo",
-                  "lanche": [
-                        "Medina",
-                        "Carol",
-                        "Daniel"
-                  ],
-                  "cuidandoCriancas": "Priscila",
-                  "oracaoDasCriancas": "Priscila"
-            }
-      }
+      { data: "2026-03-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Tamires", oferta: "Priscila", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
+      { data: "2026-03-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Samuel", oferta: "Nanda", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Samuel" } },
+      { data: "2026-03-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Carol", oferta: "Daniel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Carol" } },
+      { data: "2026-03-31", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Marcelo", oferta: "Tamires", lanche: ["Charles","Veronica","Daniel"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Marcelo" } },
+      { data: "2026-04-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Ingrid", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Luana" } },
+      { data: "2026-04-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Medina","Carol","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Nanda" } },
+      { data: "2026-04-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Daniel" } },
+      { data: "2026-04-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Charles","Veronica","Nanda"], cuidandoCriancas: "Veronica", oracaoDasCriancas: "Priscila" } },
+
+      { data: "2026-05-12", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
+      { data: "2026-05-19", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Samuel", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Samuel" } },
+      { data: "2026-05-26", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
+
+      { data: "2026-06-02", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Verônica","Charles","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
+      { data: "2026-06-09", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Daniel", oferta: "Ingrid", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Daniel" } },
+      { data: "2026-06-16", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Marcelo", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Marcelo" } },
+      { data: "2026-06-23", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
+      { data: "2026-06-30", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Ingrid", oferta: "Marcelo", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Ingrid" } },
+
+      { data: "2026-07-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Tamires", oferta: "Medina", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Tamires" } },
+      { data: "2026-07-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Nanda" } },
+      { data: "2026-07-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Carol", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
+      { data: "2026-07-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Samuel", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
+
+      { data: "2026-08-04", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Carol", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
+      { data: "2026-08-11", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Marcelo", oferta: "Samuel", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Marcelo" } },
+      { data: "2026-08-18", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Priscila", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Priscila" } },
+      { data: "2026-08-25", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
+
+      { data: "2026-09-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Medina" } },
+      { data: "2026-09-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Carol", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
+      { data: "2026-09-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Samuel", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
+      { data: "2026-09-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Tamires" } },
+      { data: "2026-09-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
+
+      { data: "2026-10-06", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Carol", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
+      { data: "2026-10-13", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Marcelo" } },
+      { data: "2026-10-20", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
+      { data: "2026-10-27", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
+
+      { data: "2026-11-03", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Marcelo","Luana","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
+      { data: "2026-11-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
+      { data: "2026-11-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Colaborativo"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
+      { data: "2026-11-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
+
+      { data: "2026-12-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Daniel", oferta: "Medina", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
+      { data: "2026-12-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Samuel", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Samuel" } },
+      { data: "2026-12-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Marcelo" } },
+      { data: "2026-12-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
+      { data: "2026-12-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Priscila" } }
     ];
 
     const $  = (sel, el=document) => el.querySelector(sel);
@@ -1126,7 +478,7 @@
         `• Lanche: ${lanche || '—'}`,
         `• Cuidando das Crianças: ${f.cuidandoCriancas}`,
         `• Oração das Crianças: ${f.oracaoDasCriancas||'—'}`
-      ].join('\n');
+      ].join('\\n');
     }
 
     function renderProximoFixo(){
@@ -1174,10 +526,10 @@
         `DTSTART:${dt(start)}`,
         `DTEND:${dt(end)}`,
         `SUMMARY:${resumo}`,
-        `DESCRIPTION:${resumo}\\n` + resumoFuncoes(encontro).replace(/\n/g,'\\n'),
+        `DESCRIPTION:${resumo}\\n` + resumoFuncoes(encontro).replace(/\\n/g,'\\\\n'),
         'END:VEVENT','END:VCALENDAR'
       ];
-      const blob = new Blob([linhas.join('\r\n')], {type:'text/calendar'});
+      const blob = new Blob([linhas.join('\\r\\n')], {type:'text/calendar'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `celula-yeshua_${encontro.data}.ics`;
@@ -1187,7 +539,7 @@
 
     function copiarResumo(encontro){
       const { dow, dm, y } = fmtDate(encontro.data);
-      const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(encontro);
+      const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\\n` + resumoFuncoes(encontro);
       navigator.clipboard?.writeText(texto)
         .then(()=> alert('Resumo copiado! Agora é só colar no WhatsApp ✅'))
         .catch(()=> prompt('Copie manualmente:', texto));
@@ -1337,7 +689,7 @@
           card.querySelector('[data-acao="ics"]').addEventListener('click', ()=> baixarICS(e));
           card.querySelector('[data-acao="copiar"]').addEventListener('click', ()=> copiarResumo(e));
           card.querySelector('[data-acao="compartilhar"]').addEventListener('click', async ()=>{
-            const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(e);
+            const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\\n` + resumoFuncoes(e);
             if(navigator.share){ try{ await navigator.share({title:'Célula Yeshua', text:texto}); } catch{} }
             else { copiarResumo(e); }
           });
@@ -1364,7 +716,7 @@
     }
 
     function normalizarCabecalho(s){
-      return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+      return String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
     }
     function excelDateToISO(n){
       const epoch = new Date(Date.UTC(1899,11,30));
@@ -1377,7 +729,7 @@
     }
     function parseStrDate(s){
       const str = String(s || '').trim();
-      const m = str.match(/(\d{1,2})\d{1,2}\d{2,4}/);
+      const m = str.match(/(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{2,4})/);
       if(!m) return null;
       let [_,a,b,c] = m;
       a=+a; b=+b; c=String(c).length===2 ? +((+c>50?'19':'20')+c) : +c;
@@ -1423,7 +775,7 @@
           const dd=String(vData.getDate()).padStart(2,'0');
           iso = `${yyyy}-${mm}-${dd}`;
         } else iso = parseStrDate(vData) || String(vData).slice(0,10);
-        if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) continue;
+        if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(iso)) continue;
 
         const lancheRaw = (r[map.ln]||'').toString().trim();
         const obj = {
