@@ -8,28 +8,34 @@
 
   <style>
     :root {
-      --bg: #0f172a;         /* slate-900 */
-      --panel: #111827;      /* gray-900 */
-      --muted: #94a3b8;      /* slate-400 */
-      --text: #e5e7eb;       /* gray-200 */
-      --brand: #22c55e;      /* green-500 */
-      --brand-2: #38bdf8;    /* sky-400 */
-      --chip: #1f2937;       /* gray-800 */
-      --chip-txt: #d1d5db;   /* gray-300 */
+      --bg: #0f172a;
+      --panel: #111827;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --brand: #22c55e;
+      --brand-2: #38bdf8;
+      --chip: #1f2937;
+      --chip-txt: #d1d5db;
       --shadow: 0 10px 30px rgba(0,0,0,.25);
       --radius: 14px;
-      --accent: #7dd3fc;     /* sky-300 */
-      --corner-size: 56px;   /* imagem topo dir */
+      --accent: #7dd3fc;
+      --corner-size: 56px;
+      --next-bg: rgba(34,197,94,.12);
+      --next-border: #22c55e;
+      --next-glow: 0 0 0 2px rgba(34,197,94,.18), 0 12px 34px rgba(34,197,94,.12);
     }
     @media (prefers-color-scheme: light) {
       :root {
-        --bg:#f8fafc;        /* slate-50 */
+        --bg:#f8fafc;
         --panel:#ffffff;
-        --muted:#475569;     /* slate-600 */
+        --muted:#475569;
         --text:#0f172a;
         --chip:#f1f5f9;
         --chip-txt:#0f172a;
         --shadow: 0 8px 20px rgba(2,6,23,.08);
+        --next-bg:#ecfdf5;
+        --next-border:#16a34a;
+        --next-glow: 0 0 0 2px rgba(22,163,74,.15), 0 12px 34px rgba(22,163,74,.10);
       }
     }
 
@@ -38,7 +44,6 @@
       font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans',Arial,"Apple Color Emoji","Segoe UI Emoji";
     }
 
-    /* ===== Splash (tela inicial) ===== */
     .intro {
       position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 18px;
       background:
@@ -78,7 +83,6 @@
     .intro-hidden{ animation: fadeOut .35s ease forwards }
     @keyframes fadeOut { to{ opacity:0; visibility:hidden } }
 
-    /* ===== Header / Controles ===== */
     header{
       position:sticky; top:0; z-index:10;
       backdrop-filter: blur(8px);
@@ -124,8 +128,30 @@
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       margin:18px 0 6px; color:var(--muted); font-size:14px;
     }
-    .next-badge{ background:#14532d; color:#dcfce7; padding:6px 10px; border-radius:999px; font-size:12px }
+    .next-badge{ background:#14532d; color:#dcfce7; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; }
     @media (prefers-color-scheme: light){ .next-badge{ background:#ecfdf5; color:#065f46 } }
+
+    .next-hero{
+      margin: 6px 0 16px;
+      border: 2px solid var(--next-border);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--next-bg) 100%, transparent), var(--panel));
+      box-shadow: var(--next-glow);
+    }
+    .next-hero-head{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .next-hero-title{ font-size: clamp(18px,2.6vw,24px); font-weight:900; margin:0; }
+    .next-hero-sub{ color:var(--muted); font-size:13px; margin-top:4px; }
+    .countdown-badge{
+      background: var(--next-border); color:#052e16; font-weight:900; font-size:12px;
+      padding:8px 12px; border-radius:999px; white-space:nowrap;
+    }
+    @media (prefers-color-scheme: light){ .countdown-badge{ color:#ffffff; } }
+    .next-hero-date{ display:flex; align-items:flex-end; gap:10px; margin-bottom:12px; }
+    .next-hero-date .big-day{ font-size: clamp(32px,5vw,42px); font-weight:900; line-height:1; }
+    .next-hero-date .meta{ color:var(--muted); font-weight:700; }
+    .next-hero-roles{ display:grid; gap:8px; }
 
     .grid{ display:grid; grid-template-columns:1fr; gap:14px }
     @media (min-width:760px){ .grid{grid-template-columns: 1fr 1fr} }
@@ -135,7 +161,24 @@
       background: var(--panel); border-radius: var(--radius);
       padding:14px 14px 10px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent);
       box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px; min-height:160px;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
     }
+    .card:hover{ transform: translateY(-2px); }
+    .card.next-card{
+      background: linear-gradient(180deg, color-mix(in oklab, var(--next-bg) 100%, transparent), var(--panel));
+      border: 2px solid var(--next-border);
+      box-shadow: var(--next-glow);
+      position: relative;
+    }
+    .card.next-card::before{
+      content: 'Próximo encontro';
+      position:absolute; right:12px; top:12px;
+      background: var(--next-border); color:#052e16;
+      font-size:11px; font-weight:800; letter-spacing:.2px;
+      padding:5px 8px; border-radius:999px;
+    }
+    @media (prefers-color-scheme: light){ .card.next-card::before{ color:#ffffff; } }
+
     .date{ display:flex; align-items:center; justify-content:space-between; gap:8px }
     .date .left{ display:flex; align-items:baseline; gap:10px }
     .dow{ color:var(--muted); font-weight:600 }
@@ -167,20 +210,18 @@
       header, .actions{ display:none !important }
       body{ background:#fff; color:#000 }
       .card{ box-shadow:none; border:1px solid #ddd }
+      .card.next-card, .next-hero{ border:2px solid #16a34a }
       .grid{ grid-template-columns:1fr 1fr }
     }
   </style>
 
-  <!-- Biblioteca para ler Excel no navegador -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.js" defer></script>
+  https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.jsscript>
 </head>
 <body>
-  <!-- ========= SPLASH ========= -->
   <div id="intro" class="intro" role="dialog" aria-labelledby="introTitle" aria-describedby="introVerse">
     <div class="intro-card">
       <div class="intro-left">
-        <!-- IMAGEM FIXA na tela inicial -->
-        <img id="introImg" src="logo-yeshua.jpg" alt="Imagem da Célula Yeshua"/>
+        logo-yeshua.jpg
       </div>
       <div class="intro-right">
         <div class="intro-title" id="introTitle">Célula Yeshua</div>
@@ -201,8 +242,7 @@
 
   <header>
     <div class="wrap header-wrap">
-      <!-- IMAGEM FIXA no canto superior direito -->
-      <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="logo-yeshua.jpg"/>
+      logo-yeshua.jpg
 
       <div class="brand">
         <div class="logo" aria-hidden="true">Y</div>
@@ -241,13 +281,24 @@
           <button class="btn secondary" id="btnImprimir" title="Imprimir ou salvar em PDF">Imprimir / PDF</button>
           <button class="btn link" id="btnImportar">📥 Importar Excel</button>
           <input id="inpExcel" type="file" accept=".xlsx,.xls" hidden/>
-          <!-- Botão de trocar imagem foi removido -->
         </div>
       </div>
     </div>
   </header>
 
   <main class="wrap">
+    <section id="proximoFixo" class="panel next-hero" hidden>
+      <div class="next-hero-head">
+        <div>
+          <div class="next-hero-title">Próximo encontro</div>
+          <div class="next-hero-sub">Sempre destacado no topo para facilitar a visualização</div>
+        </div>
+        <div class="countdown-badge" id="contadorRegressivo">Carregando…</div>
+      </div>
+      <div class="next-hero-date" id="proximoHeroData"></div>
+      <div class="next-hero-roles" id="proximoHeroFuncoes"></div>
+    </section>
+
     <div class="section-title">
       <div>Resultados</div>
       <div class="next-badge" id="proximoEncontroBadge" hidden>
@@ -265,7 +316,6 @@
   </main>
 
   <script>
-    /******** 0) VERSOS (paráfrases devocionais + referências) ********/
     const versos = [
       { ref: 'Salmo 23:1',  txt: 'O SENHOR é o meu pastor; em Cristo encontro tudo o que preciso. (paráfrase)' },
       { ref: 'Filipenses 4:13', txt: 'Posso avançar em todas as coisas, porque o Senhor me fortalece. (paráfrase)' },
@@ -277,61 +327,707 @@
       { ref: 'Salmo 121:2', txt: 'O meu socorro vem do SENHOR, Criador do céu e da terra. (paráfrase)' }
     ];
 
-    /******** 1) DADOS INICIAIS (inclui Oração das Crianças) ********/
     let escala = [
-      { data: "2026-03-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Tamires", oferta: "Priscila", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-03-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Samuel", oferta: "Nanda", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-03-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Carol", oferta: "Daniel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Carol" } },
-      { data: "2026-03-31", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Marcelo", oferta: "Tamires", lanche: ["Charles","Veronica","Daniel"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-04-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Ingrid", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Luana" } },
-      { data: "2026-04-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Medina","Carol","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-04-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-04-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Charles","Veronica","Nanda"], cuidandoCriancas: "Veronica", oracaoDasCriancas: "Priscila" } },
-
-      { data: "2026-05-12", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
-      { data: "2026-05-19", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Samuel", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-05-26", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
-
-      { data: "2026-06-02", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Verônica","Charles","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
-      { data: "2026-06-09", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Daniel", oferta: "Ingrid", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-06-16", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Marcelo", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-06-23", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-      { data: "2026-06-30", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Ingrid", oferta: "Marcelo", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Ingrid" } },
-
-      { data: "2026-07-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Tamires", oferta: "Medina", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-07-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-07-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Carol", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
-      { data: "2026-07-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Samuel", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
-
-      { data: "2026-08-04", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Carol", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
-      { data: "2026-08-11", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Marcelo", oferta: "Samuel", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-08-18", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Priscila", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Priscila" } },
-      { data: "2026-08-25", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
-
-      { data: "2026-09-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Medina" } },
-      { data: "2026-09-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Carol", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
-      { data: "2026-09-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Samuel", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-09-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-09-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-
-      { data: "2026-10-06", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Carol", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
-      { data: "2026-10-13", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-10-20", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
-      { data: "2026-10-27", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
-
-      { data: "2026-11-03", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Marcelo","Luana","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-11-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
-      { data: "2026-11-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Colaborativo"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-      { data: "2026-11-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
-
-      { data: "2026-12-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Daniel", oferta: "Medina", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-12-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Samuel", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-12-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-12-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-12-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Priscila" } }
+      {
+            "data": "2026-03-10",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Priscila",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-03-17",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Nanda",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-03-24",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Carol",
+                  "oferta": "Daniel",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Carol"
+            }
+      },
+      {
+            "data": "2026-03-31",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Tamires",
+                  "lanche": [
+                        "Charles",
+                        "Veronica",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-04-07",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Priscila",
+                  "quebraGelo": "Luana",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-04-14",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-04-21",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-04-28",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Charles",
+                        "Veronica",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Veronica",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-05-12",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Luana",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-05-19",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-05-26",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Ingrid",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Ingrid"
+            }
+      },
+      {
+            "data": "2026-06-02",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-06-09",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-06-16",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-06-23",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Medina",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-06-30",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Ingrid",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Ingrid"
+            }
+      },
+      {
+            "data": "2026-07-07",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Carol",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-07-14",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-07-21",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Carol",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Carol"
+            }
+      },
+      {
+            "data": "2026-07-28",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-08-04",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Priscila",
+                  "quebraGelo": "Luana",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-08-11",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-08-18",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-08-25",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-09-01",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Medina",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-09-08",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Carol",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Carol"
+            }
+      },
+      {
+            "data": "2026-09-15",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-09-22",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Priscila",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-09-29",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Medina",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-10-06",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Luana",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-10-13",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-10-20",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Ingrid",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Ingrid"
+            }
+      },
+      {
+            "data": "2026-10-27",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-11-03",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-11-10",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Carol",
+                  "quebraGelo": "Luana",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-11-17",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Medina",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-11-24",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-12-01",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-12-08",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-12-15",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Carol",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-12-22",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-12-29",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      }
     ];
 
-    /******** 2) UTILITÁRIOS E ESTADO ********/
     const $  = (sel, el=document) => el.querySelector(sel);
     const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
     const els = {
@@ -348,6 +1044,10 @@
       vazio: $('#vazio'),
       proximoBadge: $('#proximoEncontroBadge'),
       proximoTxt: $('#proximoEncontroTxt'),
+      proximoFixo: $('#proximoFixo'),
+      contadorRegressivo: $('#contadorRegressivo'),
+      proximoHeroData: $('#proximoHeroData'),
+      proximoHeroFuncoes: $('#proximoHeroFuncoes'),
       resumoFuncao: $('#resumoFuncao'),
       resumoTitulo: $('#resumoTitulo'),
       listaNomes: $('#listaNomes'),
@@ -356,47 +1056,113 @@
       cornerImg: $('#cornerImg')
     };
 
+    const unique = arr => [...new Set(arr)];
+
+    function hojeISO() {
+      const hoje = new Date();
+      hoje.setHours(0,0,0,0);
+      const yyyy = hoje.getFullYear();
+      const mm = String(hoje.getMonth()+1).padStart(2,'0');
+      const dd = String(hoje.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function escalaaAtiva() {
+      const hoje = hojeISO();
+      return escala.filter(e => e.data >= hoje).sort((a,b)=> a.data.localeCompare(b.data));
+    }
+
+    function getProximoISO() {
+      const ativos = escalaaAtiva();
+      return ativos.length ? ativos[0].data : null;
+    }
+
+    function textoContagem(dias){
+      if(dias < 0) return 'Encontro encerrado';
+      if(dias === 0) return 'É hoje';
+      if(dias === 1) return 'Falta 1 dia';
+      return `Faltam ${dias} dias`;
+    }
+
     const fmtDate = (iso) => {
-      const d = new Date(iso+"T00:00:00");
+      const d = new Date(iso + 'T00:00:00');
       const dow = new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(d);
       const dm  = new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit'}).format(d);
       const y   = d.getFullYear();
       return { d, dow, dm, y, iso };
     };
-    const unique = arr => [...new Set(arr)];
 
-    function getPessoasUnicas(){
-      return unique(escala.flatMap(e => {
+    function getPessoasUnicas(base = escalaaAtiva()){
+      return unique(base.flatMap(e => {
         const f = e.funcoes;
-        return [f.oracaoAbertura, f.quebraGelo, f.oferta, f.cuidandoCriancas, f.oracaoDasCriancas,
-          ...(Array.isArray(f.lanche)? f.lanche : [f.lanche].filter(Boolean))
+        return [
+          f.oracaoAbertura,
+          f.quebraGelo,
+          f.oferta,
+          f.cuidandoCriancas,
+          f.oracaoDasCriancas,
+          ...(Array.isArray(f.lanche) ? f.lanche : [f.lanche].filter(Boolean))
         ].filter(Boolean);
       })).sort((a,b)=>a.localeCompare(b,'pt-BR'));
     }
+
     function contemPessoa(e,p){
       if(!p) return true;
       const f=e.funcoes;
-      const nomes=[f.oracaoAbertura,f.quebraGelo,f.oferta,f.cuidandoCriancas,f.oracaoDasCriancas,
+      const nomes=[
+        f.oracaoAbertura,f.quebraGelo,f.oferta,f.cuidandoCriancas,f.oracaoDasCriancas,
         ...(Array.isArray(f.lanche)?f.lanche:[f.lanche].filter(Boolean))
       ].map(n=>(n||'').toLowerCase().trim());
-      return nomes.some(n=> n.includes(p.toLowerCase()));
+      return nomes.some(n=> n.includes(p.toLowerCase().trim()));
     }
+
     function resumoFuncoes(e){
       const f=e.funcoes;
-      const lanche=Array.isArray(f.lanche)? f.lanche.join(', ') : (f.lanche||'');
+      const lanche = Array.isArray(f.lanche)? f.lanche.join(', ') : (f.lanche||'');
       return [
         `• Oração de Abertura: ${f.oracaoAbertura}`,
         `• Quebra‑Gelo: ${f.quebraGelo}`,
         `• Oferta: ${f.oferta}`,
-        `• Lanche: ${lanche}`,
+        `• Lanche: ${lanche || '—'}`,
         `• Cuidando das Crianças: ${f.cuidandoCriancas}`,
         `• Oração das Crianças: ${f.oracaoDasCriancas||'—'}`
       ].join('\n');
     }
 
+    function renderProximoFixo(){
+      const proximoISO = getProximoISO();
+      if(!proximoISO){
+        els.proximoFixo.hidden = true;
+        return;
+      }
+      const encontro = escala.find(e => e.data === proximoISO);
+      const { d, dow, dm, y } = fmtDate(proximoISO);
+      const hoje = new Date(); hoje.setHours(0,0,0,0);
+      const alvo = new Date(proximoISO + 'T00:00:00');
+      const dias = Math.round((alvo - hoje) / 86400000);
+      const f = encontro.funcoes || {};
+      const lanche = Array.isArray(f.lanche) ? f.lanche : (f.lanche ? [f.lanche] : []);
+
+      els.proximoFixo.hidden = false;
+      els.contadorRegressivo.textContent = textoContagem(dias);
+      els.proximoHeroData.innerHTML = `
+        <div class="big-day">${String(d.getDate()).padStart(2,'0')}</div>
+        <div>
+          <div style="font-weight:900; font-size:18px; text-transform:capitalize">${dow}</div>
+          <div class="meta">${dm}/${y}</div>
+        </div>`;
+      els.proximoHeroFuncoes.innerHTML = `
+        <div class="role"><div class="title">Oração de Abertura</div><div class="chips"><span class="chip">${f.oracaoAbertura || '—'}</span></div></div>
+        <div class="role"><div class="title">Quebra‑Gelo</div><div class="chips"><span class="chip">${f.quebraGelo || '—'}</span></div></div>
+        <div class="role"><div class="title">Oferta</div><div class="chips"><span class="chip">${f.oferta || '—'}</span></div></div>
+        <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n=>`<span class="chip">${n}</span>`).join('') || '<span class="chip">—</span>'}</div></div>
+        <div class="role"><div class="title">Cuidando das Crianças</div><div class="chips"><span class="chip">${f.cuidandoCriancas || '—'}</span></div></div>
+        <div class="role"><div class="title">Oração das Crianças</div><div class="chips"><span class="chip">${f.oracaoDasCriancas || '—'}</span></div></div>`;
+    }
+
     function uuid(){ try{ return crypto.randomUUID(); } catch{ return Math.random().toString(36).slice(2)+'-'+Date.now(); } }
     function baixarICS(encontro){
-      const { d }=fmtDate(encontro.data);
+      const { d } = fmtDate(encontro.data);
       const start=new Date(d); start.setHours(20,0,0,0);
       const end  =new Date(d); end.setHours(21,0,0,0);
       const dt=x=> x.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
@@ -412,16 +1178,21 @@
         'END:VEVENT','END:VCALENDAR'
       ];
       const blob = new Blob([linhas.join('\r\n')], {type:'text/calendar'});
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `celula-yeshua_${encontro.data}.ics`; a.click(); URL.revokeObjectURL(a.href);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `celula-yeshua_${encontro.data}.ics`;
+      a.click();
+      URL.revokeObjectURL(a.href);
     }
+
     function copiarResumo(encontro){
       const { dow, dm, y } = fmtDate(encontro.data);
       const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(encontro);
-      navigator.clipboard?.writeText(texto).then(()=> alert('Resumo copiado! Agora é só colar no WhatsApp ✅'))
+      navigator.clipboard?.writeText(texto)
+        .then(()=> alert('Resumo copiado! Agora é só colar no WhatsApp ✅'))
         .catch(()=> prompt('Copie manualmente:', texto));
     }
 
-    /******** 3) SPLASH: versículo ********/
     function sortearVerso(){
       const i = Math.floor(Math.random()*versos.length);
       const v = versos[i];
@@ -429,28 +1200,42 @@
       els.vTxt.textContent = v.txt;
     }
 
-    /******** 4) RENDERIZAÇÃO ********/
     function popularMeses(){
-      const meses = unique(escala.map(e => e.data.slice(0,7))).sort();
+      const meses = unique(escalaaAtiva().map(e => e.data.slice(0,7))).sort();
       els.filtroMes.innerHTML = ['tudo', ...meses].map(v=>{
         if(v==='tudo') return '<option value="tudo">Todos</option>';
         const [y,m] = v.split('-');
         const nome = new Date(Number(y), Number(m)-1, 1).toLocaleDateString('pt-BR',{month:'long'});
         return `<option value="${v}">${nome} / ${y}</option>`;
       }).join('');
-      if(!els.filtroMes.value) els.filtroMes.value = meses[0] ?? 'tudo';
+      if(!meses.length) {
+        els.filtroMes.innerHTML = '<option value="tudo">Todos</option>';
+        els.filtroMes.value = 'tudo';
+        return;
+      }
+      if(!meses.includes(els.filtroMes.value)) els.filtroMes.value = meses[0];
     }
-    function popularPessoas(){ $('#listaPessoas').innerHTML = getPessoasUnicas().map(p=>`<option value="${p}">`).join(''); }
+
+    function popularPessoas(){
+      $('#listaPessoas').innerHTML = getPessoasUnicas().map(p=>`<option value="${p}">`).join('');
+    }
 
     function renderResumoPorFuncao(encontros, funcao){
       const mapa = new Map();
       for(const e of encontros){
         let nomes = [];
-        if(funcao==='lanche') nomes = Array.isArray(e.funcoes.lanche)? e.funcoes.lanche : (e.funcoes.lanche? [e.funcoes.lanche]:[]);
+        if(funcao==='lanche') nomes = Array.isArray(e.funcoes.lanche)? e.funcoes.lanche : (e.funcoes.lanche?[e.funcoes.lanche]:[]);
         else nomes = [ e.funcoes[funcao] ].filter(Boolean);
-        for(const n of nomes){ if(!n) continue; if(!mapa.has(n)) mapa.set(n, []); mapa.get(n).push(e.data); }
+        for(const n of nomes){
+          if(!n) continue;
+          if(!mapa.has(n)) mapa.set(n, []);
+          mapa.get(n).push(e.data);
+        }
       }
-      const items = [...mapa.entries()].sort((a,b)=>{ const diff=b[1].length-a[1].length; return diff!==0? diff : a[0].localeCompare(b[0],'pt-BR'); });
+      const items = [...mapa.entries()].sort((a,b)=>{
+        const diff=b[1].length-a[1].length;
+        return diff!==0? diff : a[0].localeCompare(b[0],'pt-BR');
+      });
 
       els.listaNomes.innerHTML = items.map(([nome, datas])=>{
         const datasFmt = datas.sort().map(d=>{ const {dm,y}=fmtDate(d); return `<span class="mini">${dm}/${y}</span>`; }).join('');
@@ -479,12 +1264,21 @@
       const mes = els.filtroMes.value;
       const funcao = els.filtroFuncao.value;
       const pessoa = els.filtroPessoa.value.trim();
+      const proximoISO = getProximoISO();
 
-      const base = escala.filter(e=> (mes==='tudo' || e.data.startsWith(mes)) && contemPessoa(e, pessoa));
+      const ativos = escalaaAtiva();
+      const base = ativos.filter(e => (mes==='tudo' || e.data.startsWith(mes)) && contemPessoa(e, pessoa));
 
       if(funcao !== 'todas'){
         els.resumoFuncao.hidden = false;
-        const tituloFunc = { oracaoAbertura:'Oração de Abertura', quebraGelo:'Quebra‑Gelo', oferta:'Oferta', lanche:'Lanche', cuidandoCriancas:'Cuidando das Crianças', oracaoDasCriancas:'Oração das Crianças' }[funcao] || funcao;
+        const tituloFunc = {
+          oracaoAbertura:'Oração de Abertura',
+          quebraGelo:'Quebra‑Gelo',
+          oferta:'Oferta',
+          lanche:'Lanche',
+          cuidandoCriancas:'Cuidando das Crianças',
+          oracaoDasCriancas:'Oração das Crianças'
+        }[funcao] || funcao;
         const [yy,mm]=(mes||'').split('-');
         els.resumoTitulo.innerHTML =
           `Participantes na função <b>${tituloFunc}</b>${mes!=='tudo'? ` — ${new Date(Number(yy), Number(mm)-1, 1).toLocaleDateString('pt-BR',{month:'long'})}/${yy}`:''}${pessoa? ` — filtrado por "${pessoa}"`:''}`;
@@ -501,6 +1295,7 @@
       }).sort((a,b)=> a.data.localeCompare(b.data));
 
       els.lista.innerHTML = '';
+
       if(funcao!=='todas' && !pessoa){
         els.vazio.hidden = true;
       } else if(!encontros.length){
@@ -511,7 +1306,8 @@
           const { d, dow, dm, y } = fmtDate(e.data);
           const f = e.funcoes;
           const lanche = Array.isArray(f.lanche)? f.lanche : (f.lanche? [f.lanche] : []);
-          const card = document.createElement('article'); card.className = 'card';
+          const card = document.createElement('article');
+          card.className = 'card' + (e.data === proximoISO ? ' next-card' : '');
           card.innerHTML = `
             <div class="date">
               <div class="left">
@@ -524,12 +1320,12 @@
               <div class="type chip">Célula</div>
             </div>
             <div class="roles">
-              <div class="role"><div class="title">Oração de Abertura</div><div class="chips"><span class="chip">${f.oracaoAbertura}</span></div></div>
-              <div class="role"><div class="title">Quebra‑Gelo</div><div class="chips"><span class="chip">${f.quebraGelo}</span></div></div>
-              <div class="role"><div class="title">Oferta</div><div class="chips"><span class="chip">${f.oferta}</span></div></div>
-              <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n=>`<span class="chip">${n}</span>`).join('')||'<span class="chip">—</span>'}</div></div>
-              <div class="role"><div class="title">Cuidando das Crianças</div><div class="chips"><span class="chip">${f.cuidandoCriancas}</span></div></div>
-              <div class="role"><div class="title">Oração das Crianças</div><div class="chips"><span class="chip">${f.oracaoDasCriancas||'—'}</span></div></div>
+              <div class="role"><div class="title">Oração de Abertura</div><div class="chips"><span class="chip">${f.oracaoAbertura || '—'}</span></div></div>
+              <div class="role"><div class="title">Quebra‑Gelo</div><div class="chips"><span class="chip">${f.quebraGelo || '—'}</span></div></div>
+              <div class="role"><div class="title">Oferta</div><div class="chips"><span class="chip">${f.oferta || '—'}</span></div></div>
+              <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n=>`<span class="chip">${n}</span>`).join('') || '<span class="chip">—</span>'}</div></div>
+              <div class="role"><div class="title">Cuidando das Crianças</div><div class="chips"><span class="chip">${f.cuidandoCriancas || '—'}</span></div></div>
+              <div class="role"><div class="title">Oração das Crianças</div><div class="chips"><span class="chip">${f.oracaoDasCriancas || '—'}</span></div></div>
             </div>
             <div class="foot">
               <div style="display:flex; gap:8px; flex-wrap:wrap">
@@ -548,25 +1344,50 @@
           els.lista.appendChild(card);
         }
       }
+      renderProximoFixo();
       destacarProximo();
     }
 
     function destacarProximo(){
-      const hoje = new Date(); hoje.setHours(0,0,0,0);
-      const proximos = escala.map(e => ({...e, d: new Date(e.data+"T00:00:00")})).filter(x => x.d >= hoje).sort((a,b)=>a.data.localeCompare(b.data));
-      if(proximos.length){
-        const { d } = proximos[0];
-        els.proximoTxt.textContent = d.toLocaleDateString('pt-BR', {weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
+      const proximoISO = getProximoISO();
+      if(proximoISO){
+        const { d } = fmtDate(proximoISO);
+        const hoje = new Date(); hoje.setHours(0,0,0,0);
+        const alvo = new Date(proximoISO + 'T00:00:00');
+        const dias = Math.round((alvo - hoje) / 86400000);
+        els.proximoTxt.textContent = `${d.toLocaleDateString('pt-BR', {weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})} • ${textoContagem(dias)}`;
         els.proximoBadge.hidden = false;
       } else {
         els.proximoBadge.hidden = true;
+        els.proximoFixo.hidden = true;
       }
     }
 
-    /******** 5) IMPORTAÇÃO DE EXCEL ********/
-    function normalizarCabecalho(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,''); }
-    function excelDateToISO(n){ const epoch = new Date(Date.UTC(1899,11,30)); const ms = n*86400000; const d = new Date(epoch.getTime()+ms); const yyyy=d.getUTCFullYear(); const mm=String(d.getUTCMonth()+1).padStart(2,'0'); const dd=String(d.getUTCDate()).padStart(2,'0'); return `${yyyy}-${mm}-${dd}`; }
-    function parseStrDate(s){ const m=String(s).match(/(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/); if(!m) return null; let [_,a,b,c]=m; a=+a; b=+b; c=String(c).length===2? +((+c>50?'19':'20')+c): +c; let day,mon; if(a>12){day=a;mon=b;} else if(b>12){day=b;mon=a;} else {day=a;mon=b;} const yyyy=c, mm=String(mon).padStart(2,'0'), dd=String(day).padStart(2,'0'); return `${yyyy}-${mm}-${dd}`; }
+    function normalizarCabecalho(s){
+      return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+    }
+    function excelDateToISO(n){
+      const epoch = new Date(Date.UTC(1899,11,30));
+      const ms = n*86400000;
+      const d = new Date(epoch.getTime()+ms);
+      const yyyy=d.getUTCFullYear();
+      const mm=String(d.getUTCMonth()+1).padStart(2,'0');
+      const dd=String(d.getUTCDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    function parseStrDate(s){
+      const str = String(s || '').trim();
+      const m = str.match(/(\d{1,2})\d{1,2}\d{2,4}/);
+      if(!m) return null;
+      let [_,a,b,c] = m;
+      a=+a; b=+b; c=String(c).length===2 ? +((+c>50?'19':'20')+c) : +c;
+      let day, mon;
+      if(a>12){ day=a; mon=b; }
+      else if(b>12){ day=b; mon=a; }
+      else { day=a; mon=b; }
+      return `${c}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    }
+
     async function importarExcel(file){
       if(!window.XLSX){ alert('Biblioteca XLSX não carregou. Verifique a conexão e tente novamente.'); return; }
       const buf = await file.arrayBuffer();
@@ -587,15 +1408,22 @@
         if(['oferta','coleta','dizimo','dizimosofertas'].includes(n)) map.of=k;
         if(['lanche','lanches','coffee','coffeebreak'].includes(n)) map.ln=k;
         if(['cuidandodascriancas','criancas','kids','infantil'].includes(n)) map.cc=k;
-        if(['oracaodascriancas','oracaocriancas','oracaokids','oracaodascrianças'].includes(n)) map.oc=k;
+        if(['oracaodascriancas','oracaocriancas','oracaokids','oracaodascriancas'].includes(n)) map.oc=k;
       }
       if(!map.data){ alert('Coluna de Data não encontrada.'); return; }
 
       let novos=0;
       for(const r of rows){
         const vData=r[map.data]; if(vData==null || vData==='') continue;
-        let iso; if(typeof vData==='number') iso = excelDateToISO(vData); else iso = parseStrDate(vData) || String(vData).slice(0,10);
-        if(!/\d{4}-\d{2}-\d{2}/.test(iso)) continue;
+        let iso;
+        if(typeof vData==='number') iso = excelDateToISO(vData);
+        else if(vData instanceof Date) {
+          const yyyy=vData.getFullYear();
+          const mm=String(vData.getMonth()+1).padStart(2,'0');
+          const dd=String(vData.getDate()).padStart(2,'0');
+          iso = `${yyyy}-${mm}-${dd}`;
+        } else iso = parseStrDate(vData) || String(vData).slice(0,10);
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) continue;
 
         const lancheRaw = (r[map.ln]||'').toString().trim();
         const obj = {
@@ -617,23 +1445,26 @@
       alert(`${novos} novo(s) encontro(s) importado(s) com sucesso!`);
     }
 
-    /******** 6) EVENTOS GERAIS ********/
     ['change','input'].forEach(evt=> els.filtroMes.addEventListener(evt, render));
     ['change','input'].forEach(evt=> els.filtroFuncao.addEventListener(evt, render));
     ['change','input'].forEach(evt=> els.filtroPessoa.addEventListener(evt, render));
-    $('#btnLimpar').addEventListener('click', ()=>{ els.filtroMes.value='tudo'; els.filtroFuncao.value='todas'; els.filtroPessoa.value=''; render(); });
+    $('#btnLimpar').addEventListener('click', ()=>{
+      popularMeses();
+      els.filtroFuncao.value='todas';
+      els.filtroPessoa.value='';
+      render();
+    });
     $('#btnImprimir').addEventListener('click', ()=> window.print());
     els.btnImportar.addEventListener('click', ()=> els.inpExcel.click());
     els.inpExcel.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(f) importarExcel(f); e.target.value=''; });
 
-    // Sem botão de trocar imagem. Imagem é fixa (src no HTML).
-    // Start
     sortearVerso();
     els.btnTrocarVerso.addEventListener('click', sortearVerso);
     els.btnEntrar.addEventListener('click', ()=>{ els.intro.classList.add('intro-hidden'); setTimeout(()=> els.intro.remove(), 380); });
 
-    popularMeses(); popularPessoas(); render();
+    popularMeses();
+    popularPessoas();
+    render();
   </script>
 </body>
 </html>
-     
