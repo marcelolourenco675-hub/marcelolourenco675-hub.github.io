@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Célula Yeshua — Escala 2026</title>
-  <meta name="description" content="Escala 2026 da Célula Yeshua — splash inicial com versículo aleatório; filtros por mês/função/pessoa; impressão; .ics; importação de Excel; logo fixa."/>
+  <meta name="description" content="Escala 2026 da Célula Yeshua — splash inicial com versículo aleatório; filtros por mês/função/pessoa; impressão; .ics; importação de Excel; logo fixa; sugestões randômicas para quebra-gelo e oração da oferta."/>
 
   <style>
     :root {
@@ -152,6 +152,7 @@
     .next-hero-date .big-day{ font-size: clamp(32px,5vw,42px); font-weight:900; line-height:1; }
     .next-hero-date .meta{ color:var(--muted); font-weight:700; }
     .next-hero-roles{ display:grid; gap:8px; }
+    .support-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
 
     .grid{ display:grid; grid-template-columns:1fr; gap:14px }
     @media (min-width:760px){ .grid{grid-template-columns: 1fr 1fr} }
@@ -205,9 +206,33 @@
     .mini-dates{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px }
     .mini{ background: var(--chip); color: var(--chip-txt); padding:4px 8px; border-radius:999px; font-size:11px }
 
+    .modal-overlay{
+      position:fixed; inset:0; background:rgba(2,6,23,.62); backdrop-filter: blur(6px);
+      display:none; align-items:center; justify-content:center; z-index:60; padding:16px;
+    }
+    .modal-overlay.show{ display:flex; }
+    .modal-card{
+      width:min(920px, 100%); max-height:min(86vh, 900px); overflow:auto;
+      background:var(--panel); border-radius:18px; box-shadow: var(--shadow);
+      border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); padding:18px;
+    }
+    .modal-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .modal-title{ margin:0; font-size:clamp(18px,2.6vw,24px); }
+    .modal-sub{ color:var(--muted); font-size:13px; margin-top:6px; }
+    .modal-body-card{
+      background: color-mix(in oklab, var(--chip) 88%, transparent);
+      border:1px solid color-mix(in oklab, var(--muted) 25%, transparent);
+      border-radius:14px; padding:14px;
+      display:grid; gap:10px;
+    }
+    .modal-badges{ display:flex; gap:8px; flex-wrap:wrap; }
+    .modal-section{ display:grid; gap:6px; }
+    .modal-section .label{ color:var(--muted); font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.4px; }
+    .modal-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+
     @media print{
       .intro{ display:none !important }
-      header, .actions{ display:none !important }
+      header, .actions, .support-actions, .modal-overlay{ display:none !important }
       body{ background:#fff; color:#000 }
       .card{ box-shadow:none; border:1px solid #ddd }
       .card.next-card, .next-hero{ border:2px solid #16a34a }
@@ -215,16 +240,11 @@
     }
   </style>
 
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.js" defer></script>
-</head>
-<body>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.js" defery>
   <div id="intro" class="intro" role="dialog" aria-labelledby="introTitle" aria-describedby="introVerse">
     <div class="intro-card">
       <div class="intro-left">
-        <img id="introImg" src="logo-yeshua.jpg" alt="Imagem da Célula Yeshua"/>
-      </div>
-      <div class="intro-right">
-        <div class="intro-title" id="introTitle">Célula Yeshua</div>
+        <img id="introImg" src="logo-yeshua.jpg" alt="Imagem da Célula Yeshua<div class="intro-title" id="introTitle">Célula Yeshua</div>
         <div class="intro-verse" id="introVerse">
           <div class="ref" id="vRef">Carregando referência…</div>
           <div class="txt" id="vTxt">Carregando versículo…</div>
@@ -242,10 +262,7 @@
 
   <header>
     <div class="wrap header-wrap">
-      <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="logo-yeshua.jpg"/>
-
-      <div class="brand">
-        <div class="logo" aria-hidden="true">Y</div>
+      <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="logo-yeshua.jpg"/div>
         <div>
           <h1>Célula Yeshua — Escala 2026</h1>
           <div class="subtitle">Agenda e responsabilidades por encontro (mar–dez/2026) • Importação de Excel</div>
@@ -297,6 +314,10 @@
       </div>
       <div class="next-hero-date" id="proximoHeroData"></div>
       <div class="next-hero-roles" id="proximoHeroFuncoes"></div>
+      <div class="support-actions">
+        <button class="btn secondary" id="btnQuebraGelo">💡 Sugestões de quebra-gelo</button>
+        <button class="btn secondary" id="btnOfertaIdeias">🙏 Sugestões para oração da oferta</button>
+      </div>
     </section>
 
     <div class="section-title">
@@ -315,6 +336,23 @@
     <div id="vazio" class="empty" hidden>Nenhum encontro encontrado com os filtros aplicados.</div>
   </main>
 
+  <div id="modalSugestoes" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+      <div class="modal-head">
+        <div>
+          <h2 id="modalTitulo" class="modal-title">Sugestões</h2>
+          <div id="modalSubtitulo" class="modal-sub"></div>
+        </div>
+        <button id="btnFecharModal" class="btn secondary">Fechar</button>
+      </div>
+      <div id="modalConteudo" class="modal-body-card"></div>
+      <div class="modal-actions">
+        <button id="btnSortearOutra" class="btn">Sortear outra</button>
+        <button id="btnCopiarSugestao" class="btn secondary">Copiar conteúdo</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const versos = [
       { ref: 'Salmo 23:1',  txt: 'O SENHOR é o meu pastor; em Cristo encontro tudo o que preciso. (paráfrase)' },
@@ -327,57 +365,867 @@
       { ref: 'Salmo 121:2', txt: 'O meu socorro vem do SENHOR, Criador do céu e da terra. (paráfrase)' }
     ];
 
+    const sugestoesQuebraGelo = [
+      {
+            "titulo": "Uma palavra para hoje",
+            "base": "Salmo 119:105",
+            "objetivo": "Abrir espaço para cada pessoa compartilhar como chegou e conectar o coração ao encontro.",
+            "como": "Cada pessoa diz uma palavra que represente seu momento atual e explica em até 30 segundos o motivo.",
+            "tempo": "5 a 8 min"
+      },
+      {
+            "titulo": "Gratidão da semana",
+            "base": "1 Tessalonicenses 5:18",
+            "objetivo": "Levar o grupo a começar pela gratidão, reconhecendo a mão de Deus no cotidiano.",
+            "como": "Cada pessoa compartilha algo específico pelo qual é grata nesta semana.",
+            "tempo": "5 a 7 min"
+      },
+      {
+            "titulo": "Onde vi Deus agir",
+            "base": "Salmo 77:11-12",
+            "objetivo": "Estimular o testemunho e a percepção da ação de Deus no dia a dia.",
+            "como": "Peça que cada um conte rapidamente uma situação da semana em que percebeu o cuidado de Deus.",
+            "tempo": "6 a 10 min"
+      },
+      {
+            "titulo": "Promessa que me sustenta",
+            "base": "Josué 1:9",
+            "objetivo": "Fortalecer a fé compartilhando promessas bíblicas que sustentam o coração.",
+            "como": "Cada pessoa escolhe um versículo ou promessa bíblica que tem falado com ela e compartilha com o grupo.",
+            "tempo": "8 a 12 min"
+      },
+      {
+            "titulo": "Se Jesus entrasse hoje na minha semana...",
+            "base": "Mateus 11:28-30",
+            "objetivo": "Levar o grupo a refletir sobre áreas cansadas que precisam de Jesus.",
+            "como": "Complete a frase: “Se Jesus entrasse hoje na minha semana, eu entregaria a Ele...”",
+            "tempo": "6 a 9 min"
+      },
+      {
+            "titulo": "Uma oração em uma frase",
+            "base": "Filipenses 4:6",
+            "objetivo": "Preparar o ambiente espiritual com sinceridade e dependência de Deus.",
+            "como": "Cada pessoa fala em uma frase curta um pedido ou uma gratidão a Deus.",
+            "tempo": "5 a 8 min"
+      },
+      {
+            "titulo": "Minha identidade em Cristo",
+            "base": "2 Coríntios 5:17",
+            "objetivo": "Reforçar quem somos em Jesus e gerar edificação mútua.",
+            "como": "Cada pessoa completa: “Em Cristo, eu sou...” com base na Bíblia.",
+            "tempo": "6 a 10 min"
+      },
+      {
+            "titulo": "Versículo que combina comigo hoje",
+            "base": "Hebreus 4:12",
+            "objetivo": "Criar conexão com a Palavra logo no início do encontro.",
+            "como": "Apresente 3 versículos curtos e cada pessoa escolhe o que mais fala ao coração e explica por quê.",
+            "tempo": "8 a 10 min"
+      },
+      {
+            "titulo": "O que eu preciso deixar aos pés da cruz",
+            "base": "1 Pedro 5:7",
+            "objetivo": "Promover sinceridade, rendição e apoio mútuo.",
+            "como": "Cada um compartilha algo que precisa entregar a Deus neste momento.",
+            "tempo": "7 a 10 min"
+      },
+      {
+            "titulo": "Quem foi bênção pra mim",
+            "base": "Gálatas 6:2",
+            "objetivo": "Valorizar a comunhão e reconhecer pessoas usadas por Deus.",
+            "como": "Cada participante cita alguém que foi bênção na semana e conta rapidamente como.",
+            "tempo": "6 a 9 min"
+      },
+      {
+            "titulo": "Tema da noite em uma pergunta",
+            "base": "Provérbios 20:5",
+            "objetivo": "Preparar o coração para o estudo e gerar participação.",
+            "como": "Apresente uma pergunta simples ligada ao tema da mensagem e peça respostas breves.",
+            "tempo": "5 a 8 min"
+      },
+      {
+            "titulo": "Um motivo para continuar firme",
+            "base": "Gálatas 6:9",
+            "objetivo": "Encorajar o grupo em perseverança e esperança.",
+            "como": "Cada pessoa compartilha um motivo pelo qual deseja permanecer firme com Deus.",
+            "tempo": "6 a 9 min"
+      }
+    ];
+
+    const sugestoesOferta = [
+      {
+            "titulo": "Dar com alegria",
+            "base": "2 Coríntios 9:7",
+            "explicacao": "A oferta não é peso nem obrigação; é uma resposta alegre de quem reconhece a bondade de Deus.",
+            "oracao": "Ore para que cada coração oferte com alegria, liberdade e gratidão, reconhecendo que tudo vem do Senhor."
+      },
+      {
+            "titulo": "Honrar ao Senhor com os bens",
+            "base": "Provérbios 3:9-10",
+            "explicacao": "Quando honramos a Deus com aquilo que temos, demonstramos confiança e prioridade no Reino.",
+            "oracao": "Ore para que a oferta seja expressão de honra, confiança e dependência do Senhor."
+      },
+      {
+            "titulo": "Generosidade que transborda",
+            "base": "Lucas 6:38",
+            "explicacao": "Jesus nos ensina que há bênção em viver uma vida generosa, e não presa ao egoísmo.",
+            "oracao": "Ore para que Deus forme em nós um coração generoso, disponível e sensível às necessidades do próximo."
+      },
+      {
+            "titulo": "Tudo pertence ao Senhor",
+            "base": "Salmo 24:1",
+            "explicacao": "A oferta nos lembra que nada é realmente nosso; somos apenas mordomos daquilo que Deus confiou.",
+            "oracao": "Ore para que haja sabedoria, mordomia fiel e consciência de que tudo pertence ao Senhor."
+      },
+      {
+            "titulo": "Primeiro o Reino",
+            "base": "Mateus 6:33",
+            "explicacao": "A oferta é um ato que demonstra prioridade: colocamos o Reino de Deus acima de tudo.",
+            "oracao": "Ore para que nossa vida, inclusive nossos recursos, esteja alinhada com a prioridade do Reino."
+      },
+      {
+            "titulo": "Semente de fé",
+            "base": "2 Coríntios 9:10",
+            "explicacao": "A oferta também é semente; entregamos em fé, crendo que Deus supre e multiplica para bons propósitos.",
+            "oracao": "Ore para que o Senhor use essa oferta como semente de provisão, missão e edificação."
+      },
+      {
+            "titulo": "Gratidão prática",
+            "base": "1 Crônicas 29:14",
+            "explicacao": "Ofertar é transformar gratidão em atitude concreta, reconhecendo que recebemos tudo das mãos de Deus.",
+            "oracao": "Ore com ações de graças, reconhecendo a fidelidade de Deus em cada provisão."
+      },
+      {
+            "titulo": "Fidelidade no pouco e no muito",
+            "base": "Lucas 16:10",
+            "explicacao": "A fidelidade a Deus se revela também na forma como administramos e entregamos o que temos.",
+            "oracao": "Ore para que sejamos fiéis ao Senhor em todas as áreas, incluindo recursos e administração."
+      },
+      {
+            "titulo": "Coração desapegado",
+            "base": "Mateus 6:21",
+            "explicacao": "A oferta revela onde está o nosso coração. Quando entregamos, mostramos que nosso tesouro maior é Deus.",
+            "oracao": "Ore para que o coração da igreja esteja livre do amor ao dinheiro e firmado no Senhor."
+      },
+      {
+            "titulo": "Suprimento para a obra",
+            "base": "Filipenses 4:18-19",
+            "explicacao": "A oferta abençoa a obra de Deus e é recebida como aroma agradável diante dEle.",
+            "oracao": "Ore para que Deus use cada oferta no avanço da Sua obra e supra todas as necessidades."
+      },
+      {
+            "titulo": "Entrega com sinceridade",
+            "base": "Romanos 12:1",
+            "explicacao": "Mais que valores, Deus deseja corações rendidos. A oferta material aponta para uma vida inteira entregue a Ele.",
+            "oracao": "Ore para que a nossa entrega não seja apenas financeira, mas completa, sincera e consagrada."
+      },
+      {
+            "titulo": "Mãos abertas para servir",
+            "base": "Atos 20:35",
+            "explicacao": "Jesus ensinou que há mais alegria em dar do que em receber; a oferta nos forma em serviço e amor.",
+            "oracao": "Ore para que Deus nos ensine a viver uma vida de serviço, compaixão e liberalidade."
+      }
+    ];
+
     let escala = [
-      { data: "2026-03-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Tamires", oferta: "Priscila", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-03-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Samuel", oferta: "Nanda", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-03-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Carol", oferta: "Daniel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Carol" } },
-      { data: "2026-03-31", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Marcelo", oferta: "Tamires", lanche: ["Charles","Veronica","Daniel"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-04-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Ingrid", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Luana" } },
-      { data: "2026-04-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Medina","Carol","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-04-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-04-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Charles","Veronica","Nanda"], cuidandoCriancas: "Veronica", oracaoDasCriancas: "Priscila" } },
-
-      { data: "2026-05-12", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
-      { data: "2026-05-19", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Samuel", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-05-26", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
-
-      { data: "2026-06-02", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Verônica","Charles","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
-      { data: "2026-06-09", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Daniel", oferta: "Ingrid", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-06-16", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Marcelo", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-06-23", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-      { data: "2026-06-30", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Ingrid", oferta: "Marcelo", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Ingrid" } },
-
-      { data: "2026-07-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Tamires", oferta: "Medina", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-07-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-07-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Carol", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
-      { data: "2026-07-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Samuel", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
-
-      { data: "2026-08-04", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Carol", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
-      { data: "2026-08-11", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Marcelo", oferta: "Samuel", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-08-18", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Priscila", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Priscila" } },
-      { data: "2026-08-25", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
-
-      { data: "2026-09-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Medina" } },
-      { data: "2026-09-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Carol", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
-      { data: "2026-09-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Samuel", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-09-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-09-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-
-      { data: "2026-10-06", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Carol", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
-      { data: "2026-10-13", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-10-20", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
-      { data: "2026-10-27", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
-
-      { data: "2026-11-03", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Marcelo","Luana","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-11-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
-      { data: "2026-11-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Colaborativo"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-      { data: "2026-11-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
-
-      { data: "2026-12-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Daniel", oferta: "Medina", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-12-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Samuel", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-12-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-12-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-12-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Priscila" } }
+      {
+            "data": "2026-03-10",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Priscila",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-03-17",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Nanda",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-03-24",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Carol",
+                  "oferta": "Daniel",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Carol"
+            }
+      },
+      {
+            "data": "2026-03-31",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Tamires",
+                  "lanche": [
+                        "Charles",
+                        "Veronica",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-04-07",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Priscila",
+                  "quebraGelo": "Luana",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-04-14",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-04-21",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-04-28",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Charles",
+                        "Veronica",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Veronica",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-05-12",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Luana",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-05-19",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-05-26",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Ingrid",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Ingrid"
+            }
+      },
+      {
+            "data": "2026-06-02",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-06-09",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-06-16",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-06-23",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Medina",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-06-30",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Ingrid",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Ingrid"
+            }
+      },
+      {
+            "data": "2026-07-07",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Carol",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-07-14",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-07-21",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Carol",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Carol"
+            }
+      },
+      {
+            "data": "2026-07-28",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-08-04",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Priscila",
+                  "quebraGelo": "Luana",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-08-11",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-08-18",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-08-25",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-09-01",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Medina",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-09-08",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Carol",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Carol"
+            }
+      },
+      {
+            "data": "2026-09-15",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-09-22",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Priscila",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-09-29",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Medina",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-10-06",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Luana",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-10-13",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-10-20",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Ingrid",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Ingrid"
+            }
+      },
+      {
+            "data": "2026-10-27",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Tamires",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      },
+      {
+            "data": "2026-11-03",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Medina",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-11-10",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Carol",
+                  "quebraGelo": "Luana",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Luana"
+            }
+      },
+      {
+            "data": "2026-11-17",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Samuel",
+                  "quebraGelo": "Medina",
+                  "oferta": "Ingrid",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Ingrid",
+                  "oracaoDasCriancas": "Medina"
+            }
+      },
+      {
+            "data": "2026-11-24",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Nanda",
+                  "quebraGelo": "Tamires",
+                  "oferta": "Carol",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Nanda",
+                  "oracaoDasCriancas": "Tamires"
+            }
+      },
+      {
+            "data": "2026-12-01",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Marcelo",
+                  "quebraGelo": "Daniel",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Verônica",
+                        "Charles",
+                        "Nanda"
+                  ],
+                  "cuidandoCriancas": "Tamires",
+                  "oracaoDasCriancas": "Daniel"
+            }
+      },
+      {
+            "data": "2026-12-08",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Ingrid",
+                  "quebraGelo": "Samuel",
+                  "oferta": "Luana",
+                  "lanche": [
+                        "Marcelo",
+                        "Luana",
+                        "Priscila"
+                  ],
+                  "cuidandoCriancas": "Luana",
+                  "oracaoDasCriancas": "Samuel"
+            }
+      },
+      {
+            "data": "2026-12-15",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Carol",
+                  "quebraGelo": "Marcelo",
+                  "oferta": "Medina",
+                  "lanche": [
+                        "Colaborativo"
+                  ],
+                  "cuidandoCriancas": "Carol",
+                  "oracaoDasCriancas": "Marcelo"
+            }
+      },
+      {
+            "data": "2026-12-22",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Daniel",
+                  "quebraGelo": "Nanda",
+                  "oferta": "Samuel",
+                  "lanche": [
+                        "Samuel",
+                        "Ingrid",
+                        "Tamires"
+                  ],
+                  "cuidandoCriancas": "Verônica",
+                  "oracaoDasCriancas": "Nanda"
+            }
+      },
+      {
+            "data": "2026-12-29",
+            "tipo": "Célula",
+            "observacoes": "",
+            "funcoes": {
+                  "oracaoAbertura": "Luana",
+                  "quebraGelo": "Priscila",
+                  "oferta": "Marcelo",
+                  "lanche": [
+                        "Medina",
+                        "Carol",
+                        "Daniel"
+                  ],
+                  "cuidandoCriancas": "Priscila",
+                  "oracaoDasCriancas": "Priscila"
+            }
+      }
     ];
 
     const $  = (sel, el=document) => el.querySelector(sel);
@@ -405,8 +1253,19 @@
       listaNomes: $('#listaNomes'),
       btnImportar: $('#btnImportar'),
       inpExcel: $('#inpExcel'),
-      cornerImg: $('#cornerImg')
+      cornerImg: $('#cornerImg'),
+      btnQuebraGelo: $('#btnQuebraGelo'),
+      btnOfertaIdeias: $('#btnOfertaIdeias'),
+      modalSugestoes: $('#modalSugestoes'),
+      modalTitulo: $('#modalTitulo'),
+      modalSubtitulo: $('#modalSubtitulo'),
+      modalConteudo: $('#modalConteudo'),
+      btnFecharModal: $('#btnFecharModal'),
+      btnSortearOutra: $('#btnSortearOutra'),
+      btnCopiarSugestao: $('#btnCopiarSugestao')
     };
+
+    let modalAtual = { tipo:'', item:null };
 
     const unique = arr => [...new Set(arr)];
 
@@ -478,7 +1337,7 @@
         `• Lanche: ${lanche || '—'}`,
         `• Cuidando das Crianças: ${f.cuidandoCriancas}`,
         `• Oração das Crianças: ${f.oracaoDasCriancas||'—'}`
-      ].join('\\n');
+      ].join('\n');
     }
 
     function renderProximoFixo(){
@@ -526,10 +1385,10 @@
         `DTSTART:${dt(start)}`,
         `DTEND:${dt(end)}`,
         `SUMMARY:${resumo}`,
-        `DESCRIPTION:${resumo}\\n` + resumoFuncoes(encontro).replace(/\\n/g,'\\\\n'),
+        `DESCRIPTION:${resumo}\\n` + resumoFuncoes(encontro).replace(/\n/g,'\\n'),
         'END:VEVENT','END:VCALENDAR'
       ];
-      const blob = new Blob([linhas.join('\\r\\n')], {type:'text/calendar'});
+      const blob = new Blob([linhas.join('\r\n')], {type:'text/calendar'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = `celula-yeshua_${encontro.data}.ics`;
@@ -539,7 +1398,7 @@
 
     function copiarResumo(encontro){
       const { dow, dm, y } = fmtDate(encontro.data);
-      const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\\n` + resumoFuncoes(encontro);
+      const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(encontro);
       navigator.clipboard?.writeText(texto)
         .then(()=> alert('Resumo copiado! Agora é só colar no WhatsApp ✅'))
         .catch(()=> prompt('Copie manualmente:', texto));
@@ -689,7 +1548,7 @@
           card.querySelector('[data-acao="ics"]').addEventListener('click', ()=> baixarICS(e));
           card.querySelector('[data-acao="copiar"]').addEventListener('click', ()=> copiarResumo(e));
           card.querySelector('[data-acao="compartilhar"]').addEventListener('click', async ()=>{
-            const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\\n` + resumoFuncoes(e);
+            const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(e);
             if(navigator.share){ try{ await navigator.share({title:'Célula Yeshua', text:texto}); } catch{} }
             else { copiarResumo(e); }
           });
@@ -716,7 +1575,7 @@
     }
 
     function normalizarCabecalho(s){
-      return String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+      return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
     }
     function excelDateToISO(n){
       const epoch = new Date(Date.UTC(1899,11,30));
@@ -729,8 +1588,7 @@
     }
     function parseStrDate(s){
       const str = String(s || '').trim();
-      const m = str.match(/(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{2,4})/);
-      if(!m) return null;
+      const m = str.match(/(\d{1,2})[\/.-](\d{1,2(\d{2,4    if(!m) return null;
       let [_,a,b,c] = m;
       a=+a; b=+b; c=String(c).length===2 ? +((+c>50?'19':'20')+c) : +c;
       let day, mon;
@@ -775,7 +1633,7 @@
           const dd=String(vData.getDate()).padStart(2,'0');
           iso = `${yyyy}-${mm}-${dd}`;
         } else iso = parseStrDate(vData) || String(vData).slice(0,10);
-        if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(iso)) continue;
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) continue;
 
         const lancheRaw = (r[map.ln]||'').toString().trim();
         const obj = {
@@ -797,6 +1655,66 @@
       alert(`${novos} novo(s) encontro(s) importado(s) com sucesso!`);
     }
 
+    function sortearItem(lista){ return lista[Math.floor(Math.random()*lista.length)]; }
+
+    function textoSugestao(item, tipo){
+      if(tipo === 'quebraGelo'){
+        return [
+          `Sugestão de quebra-gelo: ${item.titulo}`,
+          `Base bíblica: ${item.base}`,
+          `Objetivo: ${item.objetivo}`,
+          `Como fazer: ${item.como}`,
+          `Tempo estimado: ${item.tempo}`
+        ].join('\n');
+      }
+      return [
+        `Sugestão para oração da oferta: ${item.titulo}`,
+        `Base bíblica: ${item.base}`,
+        `Explicação: ${item.explicacao}`,
+        `Direção de oração: ${item.oracao}`
+      ].join('\n');
+    }
+
+    function renderModal(){
+      const { tipo, item } = modalAtual;
+      if(!item) return;
+      if(tipo === 'quebraGelo'){
+        els.modalTitulo.textContent = '💡 Sugestões de quebra-gelo';
+        els.modalSubtitulo.textContent = 'Inspirações bíblicas para abrir a célula com comunhão, reflexão e propósito.';
+        els.modalConteudo.innerHTML = `
+          <div class="modal-badges">
+            <span class="chip">${item.base}</span>
+            <span class="chip">${item.tempo}</span>
+          </div>
+          <div class="modal-section"><div class="label">Sugestão</div><div><strong>${item.titulo}</strong></div></div>
+          <div class="modal-section"><div class="label">Objetivo</div><div>${item.objetivo}</div></div>
+          <div class="modal-section"><div class="label">Como fazer</div><div>${item.como}</div></div>`;
+      } else {
+        els.modalTitulo.textContent = '🙏 Sugestões para oração da oferta';
+        els.modalSubtitulo.textContent = 'Textos bíblicos e direções simples para ler, explicar e orar no momento da oferta.';
+        els.modalConteudo.innerHTML = `
+          <div class="modal-badges">
+            <span class="chip">${item.base}</span>
+          </div>
+          <div class="modal-section"><div class="label">Tema</div><div><strong>${item.titulo}</strong></div></div>
+          <div class="modal-section"><div class="label">Explicação</div><div>${item.explicacao}</div></div>
+          <div class="modal-section"><div class="label">Direção de oração</div><div>${item.oracao}</div></div>`;
+      }
+    }
+
+    function abrirModal(tipo){
+      modalAtual.tipo = tipo;
+      modalAtual.item = sortearItem(tipo === 'quebraGelo' ? sugestoesQuebraGelo : sugestoesOferta);
+      renderModal();
+      els.modalSugestoes.classList.add('show');
+      els.modalSugestoes.setAttribute('aria-hidden','false');
+    }
+
+    function fecharModal(){
+      els.modalSugestoes.classList.remove('show');
+      els.modalSugestoes.setAttribute('aria-hidden','true');
+    }
+
     ['change','input'].forEach(evt=> els.filtroMes.addEventListener(evt, render));
     ['change','input'].forEach(evt=> els.filtroFuncao.addEventListener(evt, render));
     ['change','input'].forEach(evt=> els.filtroPessoa.addEventListener(evt, render));
@@ -810,13 +1728,23 @@
     els.btnImportar.addEventListener('click', ()=> els.inpExcel.click());
     els.inpExcel.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(f) importarExcel(f); e.target.value=''; });
 
-    sortearVerso();
-    els.btnTrocarVerso.addEventListener('click', sortearVerso);
-    els.btnEntrar.addEventListener('click', ()=>{ els.intro.classList.add('intro-hidden'); setTimeout(()=> els.intro.remove(), 380); });
+    els.btnQuebraGelo.addEventListener('click', ()=> abrirModal('quebraGelo'));
+    els.btnOfertaIdeias.addEventListener('click', ()=> abrirModal('oferta'));
+    els.btnFecharModal.addEventListener('click', fecharModal);
+    els.modalSugestoes.addEventListener('click', (e)=>{ if(e.target === els.modalSugestoes) fecharModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && els.modalSugestoes.classList.contains('show')) fecharModal(); });
+    els.btnSortearOutra.addEventListener('click', ()=>{
+      if(!modalAtual.tipo) return;
+      modalAtual.item = sortearItem(modalAtual.tipo === 'quebraGelo' ? sugestoesQuebraGelo : sugestoesOferta);
+      renderModal();
+    });
+    els.btnCopiarSugestao.addEventListener('click', ()=>{
+      if(!modalAtual.item) return;
+      const texto = textoSugestao(modalAtual.item, modalAtual.tipo);
+      navigator.clipboard?.writeText(texto)
+        .then(()=> alert('Conteúdo copiado! ✅'))
+        .catch(()=> prompt('Copie manualmente:', texto));
+    });
 
-    popularMeses();
-    popularPessoas();
-    render();
-  </script>
-</body>
-</html>
+    sortearVerso();
+    els.btnTrocarVerso.addEventListener('click',
