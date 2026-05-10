@@ -1,236 +1,75 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Célula Yeshua — Escala 2026</title>
-  <meta name="description" content="Escala 2026 da Célula Yeshua — splash inicial com versículo aleatório; filtros por mês/função/pessoa; impressão; .ics; importação de Excel; logo fixa."/>
-
+  <meta name="description" content="Escala 2026 da Célula Yeshua com filtros, próximo encontro em destaque e sugestões randômicas para quebra-gelo e oração da oferta." />
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --muted: #94a3b8;
-      --text: #e5e7eb;
-      --brand: #22c55e;
-      --brand-2: #38bdf8;
-      --chip: #1f2937;
-      --chip-txt: #d1d5db;
-      --shadow: 0 10px 30px rgba(0,0,0,.25);
-      --radius: 14px;
-      --accent: #7dd3fc;
-      --corner-size: 56px;
-      --next-bg: rgba(34,197,94,.12);
-      --next-border: #22c55e;
-      --next-glow: 0 0 0 2px rgba(34,197,94,.18), 0 12px 34px rgba(34,197,94,.12);
+      --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb;
+      --brand:#22c55e; --brand-2:#38bdf8; --chip:#1f2937; --chip-txt:#d1d5db;
+      --shadow:0 10px 30px rgba(0,0,0,.25); --radius:14px; --accent:#7dd3fc;
+      --corner-size:56px; --next-bg:rgba(34,197,94,.12); --next-border:#22c55e;
+      --next-glow:0 0 0 2px rgba(34,197,94,.18), 0 12px 34px rgba(34,197,94,.12);
     }
     @media (prefers-color-scheme: light) {
       :root {
-        --bg:#f8fafc;
-        --panel:#ffffff;
-        --muted:#475569;
-        --text:#0f172a;
-        --chip:#f1f5f9;
-        --chip-txt:#0f172a;
-        --shadow: 0 8px 20px rgba(2,6,23,.08);
-        --next-bg:#ecfdf5;
-        --next-border:#16a34a;
-        --next-glow: 0 0 0 2px rgba(22,163,74,.15), 0 12px 34px rgba(22,163,74,.10);
+        --bg:#f8fafc; --panel:#fff; --muted:#475569; --text:#0f172a; --chip:#f1f5f9; --chip-txt:#0f172a;
+        --shadow:0 8px 20px rgba(2,6,23,.08); --next-bg:#ecfdf5; --next-border:#16a34a;
+        --next-glow:0 0 0 2px rgba(22,163,74,.15),0 12px 34px rgba(22,163,74,.10);
       }
     }
-
-    html,body {
-      background:var(--bg); color:var(--text); margin:0;
-      font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans',Arial,"Apple Color Emoji","Segoe UI Emoji";
-    }
-
-    .intro {
-      position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 18px;
-      background:
-        radial-gradient(1200px 600px at 60% -10%, rgba(34,197,94,.15), transparent),
-        radial-gradient(1000px 600px at -10% 110%, rgba(56,189,248,.15), transparent),
-        var(--bg);
-      animation: fadeIn .4s ease;
-    }
-    @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
-
-    .intro-card {
-      max-width: 880px; width: 100%;
-      background: var(--panel);
-      border:1px solid color-mix(in oklab, var(--muted) 22%, transparent);
-      border-radius: 18px; box-shadow: var(--shadow);
-      display:grid; grid-template-columns: 1fr; overflow:hidden;
-    }
-    @media(min-width:880px){ .intro-card{ grid-template-columns: 42% 1fr } }
-
-    .intro-left { position:relative; min-height:240px; background:#000; }
-    .intro-left img{ width:100%; height:100%; object-fit:cover; }
-
-    .intro-right{ padding:18px 18px 16px; display:flex; flex-direction:column; gap:14px }
-    .intro-title{ font-size: clamp(22px,3.6vw,34px); font-weight: 900; letter-spacing:.4px }
-    .intro-verse{
-      background: color-mix(in oklab, var(--chip) 85%, transparent);
-      border:1px solid color-mix(in oklab, var(--muted) 25%, transparent);
-      border-radius:14px; padding:12px 14px;
-    }
-    .intro-verse .ref{ color:var(--muted); font-weight:700; margin-bottom:6px }
-    .intro-verse .txt{ font-size:clamp(14px,1.8vw,16px); line-height:1.45 }
-    .intro-actions{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:6px }
-    .intro-btn{
-      background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#001b0b; border:0;
-      padding:12px 16px; border-radius:999px; font-weight:800; cursor:pointer; box-shadow:var(--shadow); font-size:16px;
-    }
-    .intro-hidden{ animation: fadeOut .35s ease forwards }
-    @keyframes fadeOut { to{ opacity:0; visibility:hidden } }
-
-    header{
-      position:sticky; top:0; z-index:10;
-      backdrop-filter: blur(8px);
-      background: color-mix(in oklab, var(--bg) 85%, transparent);
-      border-bottom: 1px solid color-mix(in oklab, var(--muted) 30%, transparent);
-    }
-    .wrap{max-width:1120px; margin:auto; padding:18px 16px;}
-    .header-wrap{position:relative}
-    .brand{ display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-    .logo{
-      width:38px; height:38px; border-radius:10px;
-      background:linear-gradient(135deg,var(--brand),var(--brand-2));
-      display:grid; place-items:center; font-weight:800; color:#001b0b; box-shadow: var(--shadow);
-    }
-    h1{ font-size: clamp(20px,2.6vw,28px); margin:0 }
-    .subtitle{ color:var(--muted); font-size:14px }
-
-    .corner-img{
-      position:absolute; right:16px; top:12px; height: var(--corner-size); width:auto; object-fit:cover;
-      border-radius:12px; box-shadow: var(--shadow);
-      border:1px solid color-mix(in oklab, var(--muted) 30%, transparent);
-      background: #ffffff10;
-    }
-    @media (max-width:520px){ .corner-img{ height:44px; right:12px; top:10px } }
-
-    .controls{ display:grid; gap:10px; grid-template-columns: 1fr; margin-top:8px; }
-    .controls .row{ display:flex; flex-wrap:wrap; gap:10px }
-    .controls label{
-      display:flex; align-items:center; gap:8px; background:var(--panel);
-      padding:8px 10px; border-radius:12px;
-      border:1px solid color-mix(in oklab, var(--muted) 25%, transparent);
-    }
-    select,input[type="search"]{ background:transparent; color:var(--text); border:0; outline:0; min-width:200px; }
-    .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px }
-    .btn{
-      background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#001b0b; border:0;
-      padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer; box-shadow: var(--shadow);
-    }
-    .btn.secondary{ background: var(--panel); color: var(--text); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); }
-    .btn.link{ background: transparent; color: var(--accent); border:1px dashed color-mix(in oklab, var(--muted) 30%, transparent); }
-
-    main .section-title{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      margin:18px 0 6px; color:var(--muted); font-size:14px;
-    }
-    .next-badge{ background:#14532d; color:#dcfce7; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; }
-    @media (prefers-color-scheme: light){ .next-badge{ background:#ecfdf5; color:#065f46 } }
-
-    .next-hero{
-      margin: 6px 0 16px;
-      border: 2px solid var(--next-border);
-      background: linear-gradient(180deg, color-mix(in oklab, var(--next-bg) 100%, transparent), var(--panel));
-      box-shadow: var(--next-glow);
-    }
-    .next-hero-head{
-      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-      margin-bottom:12px;
-    }
-    .next-hero-title{ font-size: clamp(18px,2.6vw,24px); font-weight:900; margin:0; }
-    .next-hero-sub{ color:var(--muted); font-size:13px; margin-top:4px; }
-    .countdown-badge{
-      background: var(--next-border); color:#052e16; font-weight:900; font-size:12px;
-      padding:8px 12px; border-radius:999px; white-space:nowrap;
-    }
-    @media (prefers-color-scheme: light){ .countdown-badge{ color:#ffffff; } }
-    .next-hero-date{ display:flex; align-items:flex-end; gap:10px; margin-bottom:12px; }
-    .next-hero-date .big-day{ font-size: clamp(32px,5vw,42px); font-weight:900; line-height:1; }
-    .next-hero-date .meta{ color:var(--muted); font-weight:700; }
-    .next-hero-roles{ display:grid; gap:8px; }
-
-    .grid{ display:grid; grid-template-columns:1fr; gap:14px }
-    @media (min-width:760px){ .grid{grid-template-columns: 1fr 1fr} }
-    @media (min-width:1040px){ .grid{grid-template-columns: 1fr 1fr 1fr} }
-
-    .card{
-      background: var(--panel); border-radius: var(--radius);
-      padding:14px 14px 10px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent);
-      box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px; min-height:160px;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
-    }
-    .card:hover{ transform: translateY(-2px); }
-    .card.next-card{
-      background: linear-gradient(180deg, color-mix(in oklab, var(--next-bg) 100%, transparent), var(--panel));
-      border: 2px solid var(--next-border);
-      box-shadow: var(--next-glow);
-      position: relative;
-    }
-    .card.next-card::before{
-      content: 'Próximo encontro';
-      position:absolute; right:12px; top:12px;
-      background: var(--next-border); color:#052e16;
-      font-size:11px; font-weight:800; letter-spacing:.2px;
-      padding:5px 8px; border-radius:999px;
-    }
-    @media (prefers-color-scheme: light){ .card.next-card::before{ color:#ffffff; } }
-
-    .date{ display:flex; align-items:center; justify-content:space-between; gap:8px }
-    .date .left{ display:flex; align-items:baseline; gap:10px }
-    .dow{ color:var(--muted); font-weight:600 }
-    .day{ font-size:clamp(22px, 3.2vw, 28px); font-weight:900; letter-spacing:.5px }
-    .month{ color:var(--muted); font-weight:600 }
-
-    .roles{ display:grid; gap:8px }
-    .role{ display:flex; align-items:flex-start; gap:8px }
-    .role .title{ min-width:170px; font-weight:700; color:var(--muted) }
-    .chips{ display:flex; gap:6px; flex-wrap:wrap }
-    .chip{ background: var(--chip); color: var(--chip-txt); padding:6px 10px; border-radius:999px; font-size:12px }
-
-    .card .foot{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px }
-    .card .foot .btn{ padding:8px 10px; font-size:12px }
-    .empty{ padding:20px; border:1px dashed color-mix(in oklab, var(--muted) 35%, transparent); border-radius:12px; color:var(--muted); text-align:center }
-
-    .panel{ background:var(--panel); border-radius: var(--radius); padding:14px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); box-shadow: var(--shadow); }
-    .panel h3{ margin:0 0 10px 0; font-size:16px; color:var(--muted) }
-    .names{ display:grid; grid-template-columns: 1fr; gap:10px }
-    @media (min-width:700px){ .names{ grid-template-columns: 1fr 1fr } }
-    .name-item{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; background: color-mix(in oklab, var(--chip) 85%, transparent); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); padding:10px; border-radius:12px; }
-    .name-item .title{ font-weight:800 }
-    .name-item .meta{ color:var(--muted); font-size:12px }
-    .mini-dates{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px }
-    .mini{ background: var(--chip); color: var(--chip-txt); padding:4px 8px; border-radius:999px; font-size:11px }
-
-    @media print{
-      .intro{ display:none !important }
-      header, .actions{ display:none !important }
-      body{ background:#fff; color:#000 }
-      .card{ box-shadow:none; border:1px solid #ddd }
-      .card.next-card, .next-hero{ border:2px solid #16a34a }
-      .grid{ grid-template-columns:1fr 1fr }
-    }
+    html, body { margin:0; background:var(--bg); color:var(--text); font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue','Noto Sans',Arial,"Apple Color Emoji","Segoe UI Emoji"; }
+    .intro{ position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:18px; background:radial-gradient(1200px 600px at 60% -10%, rgba(34,197,94,.15), transparent), radial-gradient(1000px 600px at -10% 110%, rgba(56,189,248,.15), transparent), var(--bg); }
+    .intro-card{ max-width:880px; width:100%; background:var(--panel); border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); border-radius:18px; box-shadow:var(--shadow); display:grid; grid-template-columns:1fr; overflow:hidden; }
+    @media(min-width:880px){ .intro-card{ grid-template-columns:42% 1fr; } }
+    .intro-left{ min-height:240px; background:#000; } .intro-left img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .intro-right{ padding:18px; display:flex; flex-direction:column; gap:14px; } .intro-title{ font-size:clamp(22px,3.6vw,34px); font-weight:900; }
+    .intro-verse{ background:color-mix(in oklab, var(--chip) 85%, transparent); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); border-radius:14px; padding:12px 14px; }
+    .intro-verse .ref{ color:var(--muted); font-weight:700; margin-bottom:6px; } .intro-verse .txt{ line-height:1.45; }
+    .intro-actions{ display:flex; gap:10px; flex-wrap:wrap; } .intro-hidden{ animation:fadeOut .35s ease forwards; } @keyframes fadeOut{ to{ opacity:0; visibility:hidden; } }
+    header{ position:sticky; top:0; z-index:10; backdrop-filter:blur(8px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid color-mix(in oklab, var(--muted) 30%, transparent); }
+    .wrap{ max-width:1120px; margin:auto; padding:18px 16px; } .header-wrap{ position:relative; }
+    .brand{ display:flex; align-items:center; gap:12px; margin-bottom:10px; } .logo{ width:38px; height:38px; border-radius:10px; display:grid; place-items:center; font-weight:800; color:#001b0b; background:linear-gradient(135deg,var(--brand),var(--brand-2)); box-shadow:var(--shadow); }
+    .subtitle{ color:var(--muted); font-size:14px; } .corner-img{ position:absolute; right:16px; top:12px; height:var(--corner-size); width:auto; object-fit:cover; border-radius:12px; box-shadow:var(--shadow); border:1px solid color-mix(in oklab, var(--muted) 30%, transparent); background:#ffffff10; }
+    @media (max-width:520px){ .corner-img{ height:44px; right:12px; top:10px; } }
+    .controls{ display:grid; gap:10px; margin-top:8px; } .controls .row{ display:flex; gap:10px; flex-wrap:wrap; }
+    .controls label{ display:flex; align-items:center; gap:8px; background:var(--panel); padding:8px 10px; border-radius:12px; border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); }
+    select,input[type="search"]{ background:transparent; color:var(--text); border:0; outline:0; min-width:200px; } .actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+    .btn{ background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#001b0b; border:0; padding:10px 14px; border-radius:999px; font-weight:700; cursor:pointer; box-shadow:var(--shadow); }
+    .btn.secondary{ background:var(--panel); color:var(--text); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); } .btn.link{ background:transparent; color:var(--accent); border:1px dashed color-mix(in oklab, var(--muted) 30%, transparent); }
+    .section-title{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 0 6px; color:var(--muted); font-size:14px; } .next-badge{ background:#14532d; color:#dcfce7; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+    .next-hero{ margin:6px 0 16px; border:2px solid var(--next-border); background:linear-gradient(180deg, color-mix(in oklab, var(--next-bg) 100%, transparent), var(--panel)); box-shadow:var(--next-glow); }
+    .next-hero-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px; } .next-hero-title{ font-size:clamp(18px,2.6vw,24px); font-weight:900; } .next-hero-sub{ color:var(--muted); font-size:13px; margin-top:4px; }
+    .countdown-badge{ background:var(--next-border); color:#052e16; font-weight:900; font-size:12px; padding:8px 12px; border-radius:999px; white-space:nowrap; } @media (prefers-color-scheme: light){ .countdown-badge{ color:#fff; } }
+    .next-hero-date{ display:flex; align-items:flex-end; gap:10px; margin-bottom:12px; } .next-hero-date .big-day{ font-size:clamp(32px,5vw,42px); font-weight:900; line-height:1; } .next-hero-date .meta{ color:var(--muted); font-weight:700; } .next-hero-roles{ display:grid; gap:8px; } .support-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    .grid{ display:grid; grid-template-columns:1fr; gap:14px; } @media (min-width:760px){ .grid{ grid-template-columns:1fr 1fr; } } @media (min-width:1040px){ .grid{ grid-template-columns:1fr 1fr 1fr; } }
+    .card{ background:var(--panel); border-radius:var(--radius); padding:14px 14px 10px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:10px; min-height:160px; transition:transform .18s ease; } .card:hover{ transform:translateY(-2px); }
+    .card.next-card{ background:linear-gradient(180deg, color-mix(in oklab, var(--next-bg) 100%, transparent), var(--panel)); border:2px solid var(--next-border); box-shadow:var(--next-glow); position:relative; } .card.next-card::before{ content:'Próximo encontro'; position:absolute; right:12px; top:12px; background:var(--next-border); color:#052e16; font-size:11px; font-weight:800; padding:5px 8px; border-radius:999px; } @media (prefers-color-scheme: light){ .card.next-card::before{ color:#fff; } }
+    .date{ display:flex; align-items:center; justify-content:space-between; gap:8px; } .date .left{ display:flex; align-items:baseline; gap:10px; } .dow{ color:var(--muted); font-weight:600; } .day{ font-size:clamp(22px,3.2vw,28px); font-weight:900; } .month{ color:var(--muted); font-weight:600; }
+    .roles{ display:grid; gap:8px; } .role{ display:flex; align-items:flex-start; gap:8px; } .role .title{ min-width:170px; font-weight:700; color:var(--muted); } .chips{ display:flex; gap:6px; flex-wrap:wrap; } .chip{ background:var(--chip); color:var(--chip-txt); padding:6px 10px; border-radius:999px; font-size:12px; }
+    .card .foot{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px; } .card .foot .btn{ padding:8px 10px; font-size:12px; }
+    .empty{ padding:20px; border:1px dashed color-mix(in oklab, var(--muted) 35%, transparent); border-radius:12px; color:var(--muted); text-align:center; }
+    .panel{ background:var(--panel); border-radius:var(--radius); padding:14px; border:1px solid color-mix(in oklab, var(--muted) 22%, transparent); box-shadow:var(--shadow); } .panel h3{ margin:0 0 10px 0; font-size:16px; color:var(--muted); }
+    .names{ display:grid; grid-template-columns:1fr; gap:10px; } @media (min-width:700px){ .names{ grid-template-columns:1fr 1fr; } } .name-item{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; background:color-mix(in oklab, var(--chip) 85%, transparent); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); padding:10px; border-radius:12px; } .name-item .title{ font-weight:800; } .name-item .meta{ color:var(--muted); font-size:12px; } .mini-dates{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px; } .mini{ background:var(--chip); color:var(--chip-txt); padding:4px 8px; border-radius:999px; font-size:11px; }
+    .modal-overlay{ position:fixed; inset:0; background:rgba(2,6,23,.62); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; z-index:60; padding:16px; } .modal-overlay.show{ display:flex; }
+    .modal-card{ width:min(920px,100%); max-height:min(86vh,900px); overflow:auto; background:var(--panel); border-radius:18px; box-shadow:var(--shadow); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); padding:18px; } .modal-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; } .modal-title{ margin:0; font-size:clamp(18px,2.6vw,24px); } .modal-sub{ color:var(--muted); font-size:13px; margin-top:6px; }
+    .modal-body-card{ background:color-mix(in oklab, var(--chip) 88%, transparent); border:1px solid color-mix(in oklab, var(--muted) 25%, transparent); border-radius:14px; padding:14px; display:grid; gap:10px; } .modal-badges{ display:flex; gap:8px; flex-wrap:wrap; } .modal-section{ display:grid; gap:6px; } .modal-section .label{ color:var(--muted); font-weight:800; font-size:12px; text-transform:uppercase; } .modal-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    @media print{ .intro, header, .actions, .support-actions, .modal-overlay{ display:none !important; } body{ background:#fff; color:#000; } .card{ box-shadow:none; border:1px solid #ddd; } .card.next-card, .next-hero{ border:2px solid #16a34a; } .grid{ grid-template-columns:1fr 1fr; } }
   </style>
-
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.20.0/dist/xlsx.full.min.js" defer></script>
 </head>
 <body>
   <div id="intro" class="intro" role="dialog" aria-labelledby="introTitle" aria-describedby="introVerse">
     <div class="intro-card">
-      <div class="intro-left">
-        <img id="introImg" src="logo-yeshua.jpg" alt="Imagem da Célula Yeshua"/>
-      </div>
+      <div class="intro-left"><img id="introImg" src="logo-yeshua.jpg" alt="Imagem da Célula Yeshua" /></div>
       <div class="intro-right">
         <div class="intro-title" id="introTitle">Célula Yeshua</div>
         <div class="intro-verse" id="introVerse">
           <div class="ref" id="vRef">Carregando referência…</div>
           <div class="txt" id="vTxt">Carregando versículo…</div>
-          <div style="color:var(--muted); font-size:12px; margin-top:6px">
-            Texto devocional/paráfrase. Substitua pelo texto da sua tradução autorizada, se desejar.
-          </div>
+          <div style="color:var(--muted); font-size:12px; margin-top:6px">Texto devocional/paráfrase. Substitua pelo texto da sua tradução autorizada, se desejar.</div>
         </div>
         <div class="intro-actions">
           <button id="btnEntrar" class="intro-btn">Clique aqui para acessar a escala</button>
@@ -242,24 +81,18 @@
 
   <header>
     <div class="wrap header-wrap">
-      <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="logo-yeshua.jpg"/>
-
+      <img id="cornerImg" class="corner-img" alt="Imagem da Célula Yeshua" src="logo-yeshua.jpg" />
       <div class="brand">
         <div class="logo" aria-hidden="true">Y</div>
         <div>
-          <h1>Célula Yeshua — Escala 2026</h1>
+          <h1 style="margin:0">Célula Yeshua — Escala 2026</h1>
           <div class="subtitle">Agenda e responsabilidades por encontro (mar–dez/2026) • Importação de Excel</div>
         </div>
       </div>
-
       <div class="controls">
         <div class="row">
-          <label title="Filtrar por mês">
-            <span>🗓️ Mês</span>
-            <select id="filtroMes" aria-label="Filtrar por mês"></select>
-          </label>
-          <label title="Filtrar por função">
-            <span>🧩 Função</span>
+          <label><span>🗓️ Mês</span><select id="filtroMes" aria-label="Filtrar por mês"></select></label>
+          <label><span>🧩 Função</span>
             <select id="filtroFuncao" aria-label="Filtrar por função">
               <option value="todas">Todas</option>
               <option value="oracaoAbertura">Oração de Abertura</option>
@@ -270,17 +103,13 @@
               <option value="oracaoDasCriancas">Oração das Crianças</option>
             </select>
           </label>
-          <label title="Filtrar por pessoa">
-            <span>👤 Pessoa</span>
-            <input id="filtroPessoa" list="listaPessoas" type="search" placeholder="Digite um nome…" aria-label="Filtrar por pessoa"/>
-            <datalist id="listaPessoas"></datalist>
-          </label>
+          <label><span>👤 Pessoa</span><input id="filtroPessoa" list="listaPessoas" type="search" placeholder="Digite um nome…" aria-label="Filtrar por pessoa" /><datalist id="listaPessoas"></datalist></label>
         </div>
         <div class="actions">
           <button class="btn" id="btnLimpar">Limpar filtros</button>
-          <button class="btn secondary" id="btnImprimir" title="Imprimir ou salvar em PDF">Imprimir / PDF</button>
+          <button class="btn secondary" id="btnImprimir">Imprimir / PDF</button>
           <button class="btn link" id="btnImportar">📥 Importar Excel</button>
-          <input id="inpExcel" type="file" accept=".xlsx,.xls" hidden/>
+          <input id="inpExcel" type="file" accept=".xlsx,.xls" hidden />
         </div>
       </div>
     </div>
@@ -297,196 +126,71 @@
       </div>
       <div class="next-hero-date" id="proximoHeroData"></div>
       <div class="next-hero-roles" id="proximoHeroFuncoes"></div>
+      <div class="support-actions">
+        <button class="btn secondary" id="btnQuebraGelo">💡 Sugestões de quebra-gelo</button>
+        <button class="btn secondary" id="btnOfertaIdeias">🙏 Sugestões para oração da oferta</button>
+      </div>
     </section>
-
     <div class="section-title">
       <div>Resultados</div>
-      <div class="next-badge" id="proximoEncontroBadge" hidden>
-        Próximo encontro: <span id="proximoEncontroTxt"></span>
-      </div>
+      <div class="next-badge" id="proximoEncontroBadge" hidden>Próximo encontro: <span id="proximoEncontroTxt"></span></div>
     </div>
-
     <section id="resumoFuncao" class="panel" hidden>
       <h3 id="resumoTitulo">Resumo</h3>
       <div class="names" id="listaNomes"></div>
     </section>
-
     <section id="lista" class="grid" aria-live="polite"></section>
     <div id="vazio" class="empty" hidden>Nenhum encontro encontrado com os filtros aplicados.</div>
   </main>
 
+  <div id="modalSugestoes" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+      <div class="modal-head">
+        <div>
+          <h2 id="modalTitulo" class="modal-title">Sugestões</h2>
+          <div id="modalSubtitulo" class="modal-sub"></div>
+        </div>
+        <button id="btnFecharModal" class="btn secondary">Fechar</button>
+      </div>
+      <div id="modalConteudo" class="modal-body-card"></div>
+      <div class="modal-actions">
+        <button id="btnSortearOutra" class="btn">Sortear outra</button>
+        <button id="btnCopiarSugestao" class="btn secondary">Copiar conteúdo</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const versos = [
-      { ref: 'Salmo 23:1',  txt: 'O SENHOR é o meu pastor; em Cristo encontro tudo o que preciso. (paráfrase)' },
-      { ref: 'Filipenses 4:13', txt: 'Posso avançar em todas as coisas, porque o Senhor me fortalece. (paráfrase)' },
-      { ref: 'Provérbios 3:5-6', txt: 'Confie no SENHOR de todo o coração; Ele endireita os seus caminhos. (paráfrase)' },
-      { ref: 'Isaías 41:10', txt: 'Não tenha medo: Deus está com você e o sustenta com Sua mão. (paráfrase)' },
-      { ref: 'Mateus 5:16', txt: 'Que a sua luz brilhe para que vejam suas boas obras e glorifiquem a Deus. (paráfrase)' },
-      { ref: 'Romanos 8:28', txt: 'Deus faz cooperar para o bem aqueles que O amam. (paráfrase)' },
-      { ref: 'Josué 1:9', txt: 'Seja forte e corajoso: o SENHOR está com você por onde for. (paráfrase)' },
-      { ref: 'Salmo 121:2', txt: 'O meu socorro vem do SENHOR, Criador do céu e da terra. (paráfrase)' }
-    ];
+    const versos = [{"ref": "Salmo 23:1", "txt": "O SENHOR é o meu pastor; em Cristo encontro tudo o que preciso. (paráfrase)"}, {"ref": "Filipenses 4:13", "txt": "Posso avançar em todas as coisas, porque o Senhor me fortalece. (paráfrase)"}, {"ref": "Provérbios 3:5-6", "txt": "Confie no SENHOR de todo o coração; Ele endireita os seus caminhos. (paráfrase)"}, {"ref": "Isaías 41:10", "txt": "Não tenha medo: Deus está com você e o sustenta com Sua mão. (paráfrase)"}, {"ref": "Mateus 5:16", "txt": "Que a sua luz brilhe para que vejam suas boas obras e glorifiquem a Deus. (paráfrase)"}, {"ref": "Romanos 8:28", "txt": "Deus faz cooperar para o bem aqueles que O amam. (paráfrase)"}, {"ref": "Josué 1:9", "txt": "Seja forte e corajoso: o SENHOR está com você por onde for. (paráfrase)"}, {"ref": "Salmo 121:2", "txt": "O meu socorro vem do SENHOR, Criador do céu e da terra. (paráfrase)"}];
+    const sugestoesQuebraGelo = [{"titulo": "Uma palavra para hoje", "base": "Salmo 119:105", "objetivo": "Abrir espaço para cada pessoa compartilhar como chegou e conectar o coração ao encontro.", "como": "Cada pessoa diz uma palavra que represente seu momento atual e explica em até 30 segundos o motivo.", "tempo": "5 a 8 min"}, {"titulo": "Gratidão da semana", "base": "1 Tessalonicenses 5:18", "objetivo": "Levar o grupo a começar pela gratidão, reconhecendo a mão de Deus no cotidiano.", "como": "Cada pessoa compartilha algo específico pelo qual é grata nesta semana.", "tempo": "5 a 7 min"}, {"titulo": "Onde vi Deus agir", "base": "Salmo 77:11-12", "objetivo": "Estimular o testemunho e a percepção da ação de Deus no dia a dia.", "como": "Cada um conta rapidamente uma situação da semana em que percebeu o cuidado de Deus.", "tempo": "6 a 10 min"}, {"titulo": "Promessa que me sustenta", "base": "Josué 1:9", "objetivo": "Fortalecer a fé compartilhando promessas bíblicas que sustentam o coração.", "como": "Cada pessoa escolhe uma promessa bíblica que falou com ela e compartilha com o grupo.", "tempo": "8 a 12 min"}, {"titulo": "Uma oração em uma frase", "base": "Filipenses 4:6", "objetivo": "Preparar o ambiente espiritual com sinceridade e dependência de Deus.", "como": "Cada pessoa faz um pedido ou gratidão em uma frase curta.", "tempo": "5 a 8 min"}, {"titulo": "Quem foi bênção pra mim", "base": "Gálatas 6:2", "objetivo": "Valorizar a comunhão e reconhecer pessoas usadas por Deus.", "como": "Cada participante cita alguém que foi bênção na semana e conta rapidamente como.", "tempo": "6 a 9 min"}, {"titulo": "Minha identidade em Cristo", "base": "2 Coríntios 5:17", "objetivo": "Reforçar quem somos em Jesus e gerar edificação mútua.", "como": "Cada pessoa completa: “Em Cristo, eu sou...” com base na Bíblia.", "tempo": "6 a 10 min"}, {"titulo": "Um motivo para continuar firme", "base": "Gálatas 6:9", "objetivo": "Encorajar o grupo em perseverança e esperança.", "como": "Cada pessoa compartilha um motivo pelo qual deseja permanecer firme com Deus.", "tempo": "6 a 9 min"}];
+    const sugestoesOferta = [{"titulo": "Dar com alegria", "base": "2 Coríntios 9:7", "explicacao": "A oferta não é peso nem obrigação; é uma resposta alegre de quem reconhece a bondade de Deus.", "oracao": "Ore para que cada coração oferte com alegria, liberdade e gratidão, reconhecendo que tudo vem do Senhor."}, {"titulo": "Honrar ao Senhor com os bens", "base": "Provérbios 3:9-10", "explicacao": "Quando honramos a Deus com aquilo que temos, demonstramos confiança e prioridade no Reino.", "oracao": "Ore para que a oferta seja expressão de honra, confiança e dependência do Senhor."}, {"titulo": "Generosidade que transborda", "base": "Lucas 6:38", "explicacao": "Jesus nos ensina que há bênção em viver uma vida generosa.", "oracao": "Ore para que Deus forme em nós um coração generoso, disponível e sensível às necessidades do próximo."}, {"titulo": "Tudo pertence ao Senhor", "base": "Salmo 24:1", "explicacao": "A oferta nos lembra que nada é realmente nosso; somos mordomos do que Deus confiou.", "oracao": "Ore para que haja sabedoria e consciência de que tudo pertence ao Senhor."}, {"titulo": "Primeiro o Reino", "base": "Mateus 6:33", "explicacao": "A oferta demonstra prioridade: colocamos o Reino de Deus acima de tudo.", "oracao": "Ore para que nossa vida e nossos recursos estejam alinhados com a prioridade do Reino."}, {"titulo": "Gratidão prática", "base": "1 Crônicas 29:14", "explicacao": "Ofertar é transformar gratidão em atitude concreta, reconhecendo que recebemos tudo das mãos de Deus.", "oracao": "Ore com ações de graças, reconhecendo a fidelidade de Deus em cada provisão."}, {"titulo": "Coração desapegado", "base": "Mateus 6:21", "explicacao": "A oferta revela onde está o nosso coração.", "oracao": "Ore para que o coração da igreja esteja livre do amor ao dinheiro e firmado no Senhor."}, {"titulo": "Suprimento para a obra", "base": "Filipenses 4:18-19", "explicacao": "A oferta abençoa a obra de Deus e é recebida como aroma agradável diante dEle.", "oracao": "Ore para que Deus use cada oferta no avanço da Sua obra e supra todas as necessidades."}];
+    let escala = [{"data": "2026-03-10", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Samuel", "quebraGelo": "Tamires", "oferta": "Priscila", "lanche": ["Marcelo", "Luana", "Nanda"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Tamires"}}, {"data": "2026-03-17", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Marcelo", "quebraGelo": "Samuel", "oferta": "Nanda", "lanche": ["Medina", "Carol", "Priscila"], "cuidandoCriancas": "Priscila", "oracaoDasCriancas": "Samuel"}}, {"data": "2026-03-24", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Tamires", "quebraGelo": "Carol", "oferta": "Daniel", "lanche": ["Samuel", "Ingrid", "Tamires"], "cuidandoCriancas": "Tamires", "oracaoDasCriancas": "Carol"}}, {"data": "2026-03-31", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Ingrid", "quebraGelo": "Marcelo", "oferta": "Tamires", "lanche": ["Charles", "Veronica", "Daniel"], "cuidandoCriancas": "Luana", "oracaoDasCriancas": "Marcelo"}}, {"data": "2026-04-07", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Priscila", "quebraGelo": "Luana", "oferta": "Ingrid", "lanche": ["Marcelo", "Luana", "Priscila"], "cuidandoCriancas": "Ingrid", "oracaoDasCriancas": "Luana"}}, {"data": "2026-04-14", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Medina", "quebraGelo": "Nanda", "oferta": "Luana", "lanche": ["Medina", "Carol", "Tamires"], "cuidandoCriancas": "Carol", "oracaoDasCriancas": "Nanda"}}, {"data": "2026-04-21", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Luana", "quebraGelo": "Daniel", "oferta": "Marcelo", "lanche": ["Samuel", "Ingrid", "Daniel"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Daniel"}}, {"data": "2026-04-28", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Nanda", "quebraGelo": "Priscila", "oferta": "Medina", "lanche": ["Charles", "Veronica", "Nanda"], "cuidandoCriancas": "Veronica", "oracaoDasCriancas": "Priscila"}}, {"data": "2026-05-12", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Ingrid", "quebraGelo": "Luana", "oferta": "Marcelo", "lanche": ["Samuel", "Ingrid", "Priscila"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Luana"}}, {"data": "2026-05-19", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Medina", "quebraGelo": "Samuel", "oferta": "Carol", "lanche": ["Colaborativo"], "cuidandoCriancas": "Tamires", "oracaoDasCriancas": "Samuel"}}, {"data": "2026-05-26", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Daniel", "quebraGelo": "Ingrid", "oferta": "Luana", "lanche": ["Medina", "Carol", "Nanda"], "cuidandoCriancas": "Luana", "oracaoDasCriancas": "Ingrid"}}, {"data": "2026-06-02", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Marcelo", "quebraGelo": "Priscila", "oferta": "Medina", "lanche": ["Verônica", "Charles", "Tamires"], "cuidandoCriancas": "Carol", "oracaoDasCriancas": "Priscila"}}, {"data": "2026-06-09", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Samuel", "quebraGelo": "Daniel", "oferta": "Ingrid", "lanche": ["Marcelo", "Luana", "Nanda"], "cuidandoCriancas": "Verônica", "oracaoDasCriancas": "Daniel"}}, {"data": "2026-06-16", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Luana", "quebraGelo": "Marcelo", "oferta": "Carol", "lanche": ["Colaborativo"], "cuidandoCriancas": "Priscila", "oracaoDasCriancas": "Marcelo"}}, {"data": "2026-06-23", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Tamires", "quebraGelo": "Medina", "oferta": "Samuel", "lanche": ["Samuel", "Ingrid", "Daniel"], "cuidandoCriancas": "Ingrid", "oracaoDasCriancas": "Medina"}}, {"data": "2026-06-30", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Nanda", "quebraGelo": "Ingrid", "oferta": "Marcelo", "lanche": ["Medina", "Carol", "Priscila"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Ingrid"}}, {"data": "2026-07-07", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Carol", "quebraGelo": "Tamires", "oferta": "Medina", "lanche": ["Verônica", "Charles", "Daniel"], "cuidandoCriancas": "Tamires", "oracaoDasCriancas": "Tamires"}}, {"data": "2026-07-14", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Samuel", "quebraGelo": "Nanda", "oferta": "Luana", "lanche": ["Marcelo", "Luana", "Priscila"], "cuidandoCriancas": "Luana", "oracaoDasCriancas": "Nanda"}}, {"data": "2026-07-21", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Marcelo", "quebraGelo": "Carol", "oferta": "Medina", "lanche": ["Colaborativo"], "cuidandoCriancas": "Carol", "oracaoDasCriancas": "Carol"}}, {"data": "2026-07-28", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Daniel", "quebraGelo": "Samuel", "oferta": "Ingrid", "lanche": ["Samuel", "Ingrid", "Nanda"], "cuidandoCriancas": "Verônica", "oracaoDasCriancas": "Samuel"}}, {"data": "2026-08-04", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Priscila", "quebraGelo": "Luana", "oferta": "Carol", "lanche": ["Medina", "Carol", "Daniel"], "cuidandoCriancas": "Priscila", "oracaoDasCriancas": "Luana"}}, {"data": "2026-08-11", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Medina", "quebraGelo": "Marcelo", "oferta": "Samuel", "lanche": ["Verônica", "Charles", "Nanda"], "cuidandoCriancas": "Ingrid", "oracaoDasCriancas": "Marcelo"}}, {"data": "2026-08-18", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Ingrid", "quebraGelo": "Priscila", "oferta": "Luana", "lanche": ["Colaborativo"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Priscila"}}, {"data": "2026-08-25", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Tamires", "quebraGelo": "Daniel", "oferta": "Marcelo", "lanche": ["Marcelo", "Luana", "Nanda"], "cuidandoCriancas": "Tamires", "oracaoDasCriancas": "Daniel"}}, {"data": "2026-09-01", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Samuel", "quebraGelo": "Medina", "oferta": "Ingrid", "lanche": ["Samuel", "Ingrid", "Tamires"], "cuidandoCriancas": "Luana", "oracaoDasCriancas": "Medina"}}, {"data": "2026-09-08", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Luana", "quebraGelo": "Carol", "oferta": "Marcelo", "lanche": ["Medina", "Carol", "Daniel"], "cuidandoCriancas": "Carol", "oracaoDasCriancas": "Carol"}}, {"data": "2026-09-15", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Nanda", "quebraGelo": "Samuel", "oferta": "Medina", "lanche": ["Colaborativo"], "cuidandoCriancas": "Verônica", "oracaoDasCriancas": "Samuel"}}, {"data": "2026-09-22", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Priscila", "quebraGelo": "Tamires", "oferta": "Carol", "lanche": ["Verônica", "Charles", "Daniel"], "cuidandoCriancas": "Priscila", "oracaoDasCriancas": "Tamires"}}, {"data": "2026-09-29", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Marcelo", "quebraGelo": "Medina", "oferta": "Samuel", "lanche": ["Marcelo", "Luana", "Nanda"], "cuidandoCriancas": "Ingrid", "oracaoDasCriancas": "Medina"}}, {"data": "2026-10-06", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Ingrid", "quebraGelo": "Luana", "oferta": "Carol", "lanche": ["Samuel", "Ingrid", "Priscila"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Luana"}}, {"data": "2026-10-13", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Daniel", "quebraGelo": "Marcelo", "oferta": "Medina", "lanche": ["Medina", "Carol", "Nanda"], "cuidandoCriancas": "Tamires", "oracaoDasCriancas": "Marcelo"}}, {"data": "2026-10-20", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Samuel", "quebraGelo": "Ingrid", "oferta": "Luana", "lanche": ["Colaborativo"], "cuidandoCriancas": "Luana", "oracaoDasCriancas": "Ingrid"}}, {"data": "2026-10-27", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Tamires", "quebraGelo": "Priscila", "oferta": "Marcelo", "lanche": ["Verônica", "Charles", "Daniel"], "cuidandoCriancas": "Carol", "oracaoDasCriancas": "Priscila"}}, {"data": "2026-11-03", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Medina", "quebraGelo": "Nanda", "oferta": "Samuel", "lanche": ["Marcelo", "Luana", "Tamires"], "cuidandoCriancas": "Verônica", "oracaoDasCriancas": "Nanda"}}, {"data": "2026-11-10", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Carol", "quebraGelo": "Luana", "oferta": "Marcelo", "lanche": ["Samuel", "Ingrid", "Daniel"], "cuidandoCriancas": "Priscila", "oracaoDasCriancas": "Luana"}}, {"data": "2026-11-17", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Samuel", "quebraGelo": "Medina", "oferta": "Ingrid", "lanche": ["Colaborativo"], "cuidandoCriancas": "Ingrid", "oracaoDasCriancas": "Medina"}}, {"data": "2026-11-24", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Nanda", "quebraGelo": "Tamires", "oferta": "Carol", "lanche": ["Medina", "Carol", "Priscila"], "cuidandoCriancas": "Nanda", "oracaoDasCriancas": "Tamires"}}, {"data": "2026-12-01", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Marcelo", "quebraGelo": "Daniel", "oferta": "Medina", "lanche": ["Verônica", "Charles", "Nanda"], "cuidandoCriancas": "Tamires", "oracaoDasCriancas": "Daniel"}}, {"data": "2026-12-08", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Ingrid", "quebraGelo": "Samuel", "oferta": "Luana", "lanche": ["Marcelo", "Luana", "Priscila"], "cuidandoCriancas": "Luana", "oracaoDasCriancas": "Samuel"}}, {"data": "2026-12-15", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Carol", "quebraGelo": "Marcelo", "oferta": "Medina", "lanche": ["Colaborativo"], "cuidandoCriancas": "Carol", "oracaoDasCriancas": "Marcelo"}}, {"data": "2026-12-22", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Daniel", "quebraGelo": "Nanda", "oferta": "Samuel", "lanche": ["Samuel", "Ingrid", "Tamires"], "cuidandoCriancas": "Verônica", "oracaoDasCriancas": "Nanda"}}, {"data": "2026-12-29", "tipo": "Célula", "observacoes": "", "funcoes": {"oracaoAbertura": "Luana", "quebraGelo": "Priscila", "oferta": "Marcelo", "lanche": ["Medina", "Carol", "Daniel"], "cuidandoCriancas": "Priscila", "oracaoDasCriancas": "Priscila"}}];
 
-    let escala = [
-      { data: "2026-03-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Tamires", oferta: "Priscila", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-03-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Samuel", oferta: "Nanda", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-03-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Carol", oferta: "Daniel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Carol" } },
-      { data: "2026-03-31", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Marcelo", oferta: "Tamires", lanche: ["Charles","Veronica","Daniel"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-04-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Ingrid", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Luana" } },
-      { data: "2026-04-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Medina","Carol","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-04-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-04-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Charles","Veronica","Nanda"], cuidandoCriancas: "Veronica", oracaoDasCriancas: "Priscila" } },
-
-      { data: "2026-05-12", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
-      { data: "2026-05-19", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Samuel", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-05-26", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
-
-      { data: "2026-06-02", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Priscila", oferta: "Medina", lanche: ["Verônica","Charles","Tamires"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
-      { data: "2026-06-09", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Daniel", oferta: "Ingrid", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-06-16", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Marcelo", oferta: "Carol", lanche: ["Colaborativo"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-06-23", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-      { data: "2026-06-30", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Ingrid", oferta: "Marcelo", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Ingrid" } },
-
-      { data: "2026-07-07", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Tamires", oferta: "Medina", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-07-14", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Nanda", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-07-21", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Carol", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
-      { data: "2026-07-28", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Samuel", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Nanda"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
-
-      { data: "2026-08-04", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Luana", oferta: "Carol", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
-      { data: "2026-08-11", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Marcelo", oferta: "Samuel", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-08-18", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Priscila", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Priscila" } },
-      { data: "2026-08-25", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Daniel", oferta: "Marcelo", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
-
-      { data: "2026-09-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Medina" } },
-      { data: "2026-09-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Carol", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Carol" } },
-      { data: "2026-09-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Samuel", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-09-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Priscila", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Tamires" } },
-      { data: "2026-09-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Medina", oferta: "Samuel", lanche: ["Marcelo","Luana","Nanda"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-
-      { data: "2026-10-06", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Luana", oferta: "Carol", lanche: ["Samuel","Ingrid","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Luana" } },
-      { data: "2026-10-13", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Medina","Carol","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-10-20", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Ingrid", oferta: "Luana", lanche: ["Colaborativo"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Ingrid" } },
-      { data: "2026-10-27", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Tamires", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Verônica","Charles","Daniel"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Priscila" } },
-
-      { data: "2026-11-03", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Medina", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Marcelo","Luana","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-11-10", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Luana", oferta: "Marcelo", lanche: ["Samuel","Ingrid","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Luana" } },
-      { data: "2026-11-17", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Samuel", quebraGelo: "Medina", oferta: "Ingrid", lanche: ["Colaborativo"], cuidandoCriancas: "Ingrid", oracaoDasCriancas: "Medina" } },
-      { data: "2026-11-24", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Nanda", quebraGelo: "Tamires", oferta: "Carol", lanche: ["Medina","Carol","Priscila"], cuidandoCriancas: "Nanda", oracaoDasCriancas: "Tamires" } },
-
-      { data: "2026-12-01", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Marcelo", quebraGelo: "Daniel", oferta: "Medina", lanche: ["Verônica","Charles","Nanda"], cuidandoCriancas: "Tamires", oracaoDasCriancas: "Daniel" } },
-      { data: "2026-12-08", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Ingrid", quebraGelo: "Samuel", oferta: "Luana", lanche: ["Marcelo","Luana","Priscila"], cuidandoCriancas: "Luana", oracaoDasCriancas: "Samuel" } },
-      { data: "2026-12-15", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Carol", quebraGelo: "Marcelo", oferta: "Medina", lanche: ["Colaborativo"], cuidandoCriancas: "Carol", oracaoDasCriancas: "Marcelo" } },
-      { data: "2026-12-22", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Daniel", quebraGelo: "Nanda", oferta: "Samuel", lanche: ["Samuel","Ingrid","Tamires"], cuidandoCriancas: "Verônica", oracaoDasCriancas: "Nanda" } },
-      { data: "2026-12-29", tipo: "Célula", observacoes: "", funcoes: { oracaoAbertura: "Luana", quebraGelo: "Priscila", oferta: "Marcelo", lanche: ["Medina","Carol","Daniel"], cuidandoCriancas: "Priscila", oracaoDasCriancas: "Priscila" } }
-    ];
-
-    const $  = (sel, el=document) => el.querySelector(sel);
+    const $ = (sel, el=document) => el.querySelector(sel);
     const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
     const els = {
-      intro: $('#intro'),
-      introImg: $('#introImg'),
-      vRef: $('#vRef'),
-      vTxt: $('#vTxt'),
-      btnEntrar: $('#btnEntrar'),
-      btnTrocarVerso: $('#btnTrocarVerso'),
-      filtroMes: $('#filtroMes'),
-      filtroFuncao: $('#filtroFuncao'),
-      filtroPessoa: $('#filtroPessoa'),
-      lista: $('#lista'),
-      vazio: $('#vazio'),
-      proximoBadge: $('#proximoEncontroBadge'),
-      proximoTxt: $('#proximoEncontroTxt'),
-      proximoFixo: $('#proximoFixo'),
-      contadorRegressivo: $('#contadorRegressivo'),
-      proximoHeroData: $('#proximoHeroData'),
-      proximoHeroFuncoes: $('#proximoHeroFuncoes'),
-      resumoFuncao: $('#resumoFuncao'),
-      resumoTitulo: $('#resumoTitulo'),
-      listaNomes: $('#listaNomes'),
-      btnImportar: $('#btnImportar'),
-      inpExcel: $('#inpExcel'),
-      cornerImg: $('#cornerImg')
+      intro: $('#intro'), introImg: $('#introImg'), vRef: $('#vRef'), vTxt: $('#vTxt'), btnEntrar: $('#btnEntrar'), btnTrocarVerso: $('#btnTrocarVerso'),
+      filtroMes: $('#filtroMes'), filtroFuncao: $('#filtroFuncao'), filtroPessoa: $('#filtroPessoa'), lista: $('#lista'), vazio: $('#vazio'),
+      proximoBadge: $('#proximoEncontroBadge'), proximoTxt: $('#proximoEncontroTxt'), proximoFixo: $('#proximoFixo'), contadorRegressivo: $('#contadorRegressivo'), proximoHeroData: $('#proximoHeroData'), proximoHeroFuncoes: $('#proximoHeroFuncoes'),
+      resumoFuncao: $('#resumoFuncao'), resumoTitulo: $('#resumoTitulo'), listaNomes: $('#listaNomes'), btnImportar: $('#btnImportar'), inpExcel: $('#inpExcel'), cornerImg: $('#cornerImg'),
+      btnQuebraGelo: $('#btnQuebraGelo'), btnOfertaIdeias: $('#btnOfertaIdeias'), modalSugestoes: $('#modalSugestoes'), modalTitulo: $('#modalTitulo'), modalSubtitulo: $('#modalSubtitulo'), modalConteudo: $('#modalConteudo'), btnFecharModal: $('#btnFecharModal'), btnSortearOutra: $('#btnSortearOutra'), btnCopiarSugestao: $('#btnCopiarSugestao')
     };
+    let modalAtual = { tipo:'', item:null };
 
     const unique = arr => [...new Set(arr)];
+    function hojeISO() { const h = new Date(); h.setHours(0,0,0,0); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`; }
+    function escalaAtiva() { const hoje = hojeISO(); return escala.filter(e => e.data >= hoje).sort((a,b) => a.data.localeCompare(b.data)); }
+    function getProximoISO() { const ativos = escalaAtiva(); return ativos.length ? ativos[0].data : null; }
+    function textoContagem(dias) { if(dias < 0) return 'Encontro encerrado'; if(dias === 0) return 'É hoje'; if(dias === 1) return 'Falta 1 dia'; return `Faltam ${dias} dias`; }
+    function fmtDate(iso) { const d = new Date(iso + 'T00:00:00'); return { d, dow:new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(d), dm:new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit'}).format(d), y:d.getFullYear(), iso }; }
+    function getPessoasUnicas(base=escalaAtiva()) { return unique(base.flatMap(e => { const f=e.funcoes; return [f.oracaoAbertura,f.quebraGelo,f.oferta,f.cuidandoCriancas,f.oracaoDasCriancas,...(Array.isArray(f.lanche)?f.lanche:[f.lanche].filter(Boolean))].filter(Boolean); })).sort((a,b)=>a.localeCompare(b,'pt-BR')); }
+    function contemPessoa(e,p) { if(!p) return true; const f=e.funcoes; const nomes=[f.oracaoAbertura,f.quebraGelo,f.oferta,f.cuidandoCriancas,f.oracaoDasCriancas,...(Array.isArray(f.lanche)?f.lanche:[f.lanche].filter(Boolean))].map(n => (n||'').toLowerCase().trim()); return nomes.some(n => n.includes(p.toLowerCase().trim())); }
+    function resumoFuncoes(e) { const f=e.funcoes; const lanche=Array.isArray(f.lanche)? f.lanche.join(', ') : (f.lanche||''); return [`• Oração de Abertura: ${f.oracaoAbertura}`,`• Quebra‑Gelo: ${f.quebraGelo}`,`• Oferta: ${f.oferta}`,`• Lanche: ${lanche || '—'}`,`• Cuidando das Crianças: ${f.cuidandoCriancas}`,`• Oração das Crianças: ${f.oracaoDasCriancas || '—'}`].join('\n'); }
+    function sortearVerso() { const v = versos[Math.floor(Math.random()*versos.length)]; els.vRef.textContent = v.ref; els.vTxt.textContent = v.txt; }
 
-    function hojeISO() {
-      const hoje = new Date();
-      hoje.setHours(0,0,0,0);
-      const yyyy = hoje.getFullYear();
-      const mm = String(hoje.getMonth()+1).padStart(2,'0');
-      const dd = String(hoje.getDate()).padStart(2,'0');
-      return `${yyyy}-${mm}-${dd}`;
-    }
-
-    function escalaaAtiva() {
-      const hoje = hojeISO();
-      return escala.filter(e => e.data >= hoje).sort((a,b)=> a.data.localeCompare(b.data));
-    }
-
-    function getProximoISO() {
-      const ativos = escalaaAtiva();
-      return ativos.length ? ativos[0].data : null;
-    }
-
-    function textoContagem(dias){
-      if(dias < 0) return 'Encontro encerrado';
-      if(dias === 0) return 'É hoje';
-      if(dias === 1) return 'Falta 1 dia';
-      return `Faltam ${dias} dias`;
-    }
-
-    const fmtDate = (iso) => {
-      const d = new Date(iso + 'T00:00:00');
-      const dow = new Intl.DateTimeFormat('pt-BR',{weekday:'long'}).format(d);
-      const dm  = new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit'}).format(d);
-      const y   = d.getFullYear();
-      return { d, dow, dm, y, iso };
-    };
-
-    function getPessoasUnicas(base = escalaaAtiva()){
-      return unique(base.flatMap(e => {
-        const f = e.funcoes;
-        return [
-          f.oracaoAbertura,
-          f.quebraGelo,
-          f.oferta,
-          f.cuidandoCriancas,
-          f.oracaoDasCriancas,
-          ...(Array.isArray(f.lanche) ? f.lanche : [f.lanche].filter(Boolean))
-        ].filter(Boolean);
-      })).sort((a,b)=>a.localeCompare(b,'pt-BR'));
-    }
-
-    function contemPessoa(e,p){
-      if(!p) return true;
-      const f=e.funcoes;
-      const nomes=[
-        f.oracaoAbertura,f.quebraGelo,f.oferta,f.cuidandoCriancas,f.oracaoDasCriancas,
-        ...(Array.isArray(f.lanche)?f.lanche:[f.lanche].filter(Boolean))
-      ].map(n=>(n||'').toLowerCase().trim());
-      return nomes.some(n=> n.includes(p.toLowerCase().trim()));
-    }
-
-    function resumoFuncoes(e){
-      const f=e.funcoes;
-      const lanche = Array.isArray(f.lanche)? f.lanche.join(', ') : (f.lanche||'');
-      return [
-        `• Oração de Abertura: ${f.oracaoAbertura}`,
-        `• Quebra‑Gelo: ${f.quebraGelo}`,
-        `• Oferta: ${f.oferta}`,
-        `• Lanche: ${lanche || '—'}`,
-        `• Cuidando das Crianças: ${f.cuidandoCriancas}`,
-        `• Oração das Crianças: ${f.oracaoDasCriancas||'—'}`
-      ].join('\\n');
-    }
-
-    function renderProximoFixo(){
+    function renderProximoFixo() {
       const proximoISO = getProximoISO();
-      if(!proximoISO){
-        els.proximoFixo.hidden = true;
-        return;
-      }
+      if(!proximoISO) { els.proximoFixo.hidden = true; return; }
       const encontro = escala.find(e => e.data === proximoISO);
       const { d, dow, dm, y } = fmtDate(proximoISO);
       const hoje = new Date(); hoje.setHours(0,0,0,0);
@@ -494,329 +198,164 @@
       const dias = Math.round((alvo - hoje) / 86400000);
       const f = encontro.funcoes || {};
       const lanche = Array.isArray(f.lanche) ? f.lanche : (f.lanche ? [f.lanche] : []);
-
       els.proximoFixo.hidden = false;
       els.contadorRegressivo.textContent = textoContagem(dias);
-      els.proximoHeroData.innerHTML = `
-        <div class="big-day">${String(d.getDate()).padStart(2,'0')}</div>
-        <div>
-          <div style="font-weight:900; font-size:18px; text-transform:capitalize">${dow}</div>
-          <div class="meta">${dm}/${y}</div>
-        </div>`;
+      els.proximoHeroData.innerHTML = `<div class="big-day">${String(d.getDate()).padStart(2,'0')}</div><div><div style="font-weight:900; font-size:18px; text-transform:capitalize">${dow}</div><div class="meta">${dm}/${y}</div></div>`;
       els.proximoHeroFuncoes.innerHTML = `
         <div class="role"><div class="title">Oração de Abertura</div><div class="chips"><span class="chip">${f.oracaoAbertura || '—'}</span></div></div>
         <div class="role"><div class="title">Quebra‑Gelo</div><div class="chips"><span class="chip">${f.quebraGelo || '—'}</span></div></div>
         <div class="role"><div class="title">Oferta</div><div class="chips"><span class="chip">${f.oferta || '—'}</span></div></div>
-        <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n=>`<span class="chip">${n}</span>`).join('') || '<span class="chip">—</span>'}</div></div>
+        <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n => `<span class="chip">${n}</span>`).join('') || '<span class="chip">—</span>'}</div></div>
         <div class="role"><div class="title">Cuidando das Crianças</div><div class="chips"><span class="chip">${f.cuidandoCriancas || '—'}</span></div></div>
         <div class="role"><div class="title">Oração das Crianças</div><div class="chips"><span class="chip">${f.oracaoDasCriancas || '—'}</span></div></div>`;
     }
 
-    function uuid(){ try{ return crypto.randomUUID(); } catch{ return Math.random().toString(36).slice(2)+'-'+Date.now(); } }
-    function baixarICS(encontro){
-      const { d } = fmtDate(encontro.data);
-      const start=new Date(d); start.setHours(20,0,0,0);
-      const end  =new Date(d); end.setHours(21,0,0,0);
-      const dt=x=> x.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+    function uuid() { try { return crypto.randomUUID(); } catch { return Math.random().toString(36).slice(2)+'-'+Date.now(); } }
+    function baixarICS(encontro) {
+      const { d } = fmtDate(encontro.data); const start = new Date(d); start.setHours(20,0,0,0); const end = new Date(d); end.setHours(21,0,0,0);
+      const dt = x => x.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
       const resumo = `Célula Yeshua — ${start.toLocaleDateString('pt-BR')}`;
-      const linhas = [
-        'BEGIN:VCALENDAR','VERSION:2.0','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
-        `UID:${uuid()}@celula-yeshua`,
-        `DTSTAMP:${dt(new Date())}`,
-        `DTSTART:${dt(start)}`,
-        `DTEND:${dt(end)}`,
-        `SUMMARY:${resumo}`,
-        `DESCRIPTION:${resumo}\\n` + resumoFuncoes(encontro).replace(/\\n/g,'\\\\n'),
-        'END:VEVENT','END:VCALENDAR'
-      ];
-      const blob = new Blob([linhas.join('\\r\\n')], {type:'text/calendar'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `celula-yeshua_${encontro.data}.ics`;
-      a.click();
-      URL.revokeObjectURL(a.href);
+      const linhas = ['BEGIN:VCALENDAR','VERSION:2.0','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',`UID:${uuid()}@celula-yeshua`,`DTSTAMP:${dt(new Date())}`,`DTSTART:${dt(start)}`,`DTEND:${dt(end)}`,`SUMMARY:${resumo}`,`DESCRIPTION:${resumo}\\n` + resumoFuncoes(encontro).replace(/\n/g,'\\n'),'END:VEVENT','END:VCALENDAR'];
+      const blob = new Blob([linhas.join('\r\n')], {type:'text/calendar'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `celula-yeshua_${encontro.data}.ics`; a.click(); URL.revokeObjectURL(a.href);
     }
+    function copiarResumo(encontro) { const { dow, dm, y } = fmtDate(encontro.data); const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(encontro); navigator.clipboard?.writeText(texto).then(() => alert('Resumo copiado! Agora é só colar no WhatsApp ✅')).catch(() => prompt('Copie manualmente:', texto)); }
 
-    function copiarResumo(encontro){
-      const { dow, dm, y } = fmtDate(encontro.data);
-      const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\\n` + resumoFuncoes(encontro);
-      navigator.clipboard?.writeText(texto)
-        .then(()=> alert('Resumo copiado! Agora é só colar no WhatsApp ✅'))
-        .catch(()=> prompt('Copie manualmente:', texto));
-    }
-
-    function sortearVerso(){
-      const i = Math.floor(Math.random()*versos.length);
-      const v = versos[i];
-      els.vRef.textContent = v.ref;
-      els.vTxt.textContent = v.txt;
-    }
-
-    function popularMeses(){
-      const meses = unique(escalaaAtiva().map(e => e.data.slice(0,7))).sort();
-      els.filtroMes.innerHTML = ['tudo', ...meses].map(v=>{
-        if(v==='tudo') return '<option value="tudo">Todos</option>';
+    function popularMeses() {
+      const meses = unique(escalaAtiva().map(e => e.data.slice(0,7))).sort();
+      els.filtroMes.innerHTML = ['tudo', ...meses].map(v => {
+        if(v === 'tudo') return '<option value="tudo">Todos</option>';
         const [y,m] = v.split('-');
         const nome = new Date(Number(y), Number(m)-1, 1).toLocaleDateString('pt-BR',{month:'long'});
         return `<option value="${v}">${nome} / ${y}</option>`;
       }).join('');
-      if(!meses.length) {
-        els.filtroMes.innerHTML = '<option value="tudo">Todos</option>';
-        els.filtroMes.value = 'tudo';
-        return;
-      }
+      if(!meses.length) { els.filtroMes.innerHTML = '<option value="tudo">Todos</option>'; els.filtroMes.value = 'tudo'; return; }
       if(!meses.includes(els.filtroMes.value)) els.filtroMes.value = meses[0];
     }
+    function popularPessoas() { $('#listaPessoas').innerHTML = getPessoasUnicas().map(p => `<option value="${p}">`).join(''); }
 
-    function popularPessoas(){
-      $('#listaPessoas').innerHTML = getPessoasUnicas().map(p=>`<option value="${p}">`).join('');
-    }
-
-    function renderResumoPorFuncao(encontros, funcao){
+    function renderResumoPorFuncao(encontros, funcao) {
       const mapa = new Map();
-      for(const e of encontros){
-        let nomes = [];
-        if(funcao==='lanche') nomes = Array.isArray(e.funcoes.lanche)? e.funcoes.lanche : (e.funcoes.lanche?[e.funcoes.lanche]:[]);
-        else nomes = [ e.funcoes[funcao] ].filter(Boolean);
-        for(const n of nomes){
-          if(!n) continue;
-          if(!mapa.has(n)) mapa.set(n, []);
-          mapa.get(n).push(e.data);
-        }
+      for(const e of encontros) {
+        const nomes = funcao === 'lanche' ? (Array.isArray(e.funcoes.lanche) ? e.funcoes.lanche : (e.funcoes.lanche ? [e.funcoes.lanche] : [])) : [e.funcoes[funcao]].filter(Boolean);
+        for(const n of nomes) { if(!n) continue; if(!mapa.has(n)) mapa.set(n, []); mapa.get(n).push(e.data); }
       }
-      const items = [...mapa.entries()].sort((a,b)=>{
-        const diff=b[1].length-a[1].length;
-        return diff!==0? diff : a[0].localeCompare(b[0],'pt-BR');
-      });
-
-      els.listaNomes.innerHTML = items.map(([nome, datas])=>{
-        const datasFmt = datas.sort().map(d=>{ const {dm,y}=fmtDate(d); return `<span class="mini">${dm}/${y}</span>`; }).join('');
-        return `
-          <div class="name-item">
-            <div>
-              <div class="title">${nome}</div>
-              <div class="meta">${datas.length} vez(es)</div>
-              <div class="mini-dates">${datasFmt}</div>
-            </div>
-            <div class="name-actions">
-              <button class="btn secondary" data-filtrar-nome="${encodeURIComponent(nome)}">Ver encontros</button>
-            </div>
-          </div>`;
+      const items = [...mapa.entries()].sort((a,b) => { const diff = b[1].length - a[1].length; return diff !== 0 ? diff : a[0].localeCompare(b[0],'pt-BR'); });
+      els.listaNomes.innerHTML = items.map(([nome,datas]) => {
+        const datasFmt = datas.sort().map(d => { const {dm,y} = fmtDate(d); return `<span class="mini">${dm}/${y}</span>`; }).join('');
+        return `<div class="name-item"><div><div class="title">${nome}</div><div class="meta">${datas.length} vez(es)</div><div class="mini-dates">${datasFmt}</div></div><div class="name-actions"><button class="btn secondary" data-filtrar-nome="${encodeURIComponent(nome)}">Ver encontros</button></div></div>`;
       }).join('') || '<div class="empty">Sem nomes para esta função e filtros selecionados.</div>';
-
-      $$('[data-filtrar-nome]').forEach(btn=>{
-        btn.addEventListener('click', ()=>{
-          els.filtroPessoa.value = decodeURIComponent(btn.getAttribute('data-filtrar-nome'));
-          render();
-        });
-      });
+      $$('[data-filtrar-nome]').forEach(btn => btn.addEventListener('click', () => { els.filtroPessoa.value = decodeURIComponent(btn.getAttribute('data-filtrar-nome')); render(); }));
     }
 
-    function render(){
-      const mes = els.filtroMes.value;
-      const funcao = els.filtroFuncao.value;
-      const pessoa = els.filtroPessoa.value.trim();
-      const proximoISO = getProximoISO();
-
-      const ativos = escalaaAtiva();
-      const base = ativos.filter(e => (mes==='tudo' || e.data.startsWith(mes)) && contemPessoa(e, pessoa));
-
-      if(funcao !== 'todas'){
+    function render() {
+      const mes = els.filtroMes.value; const funcao = els.filtroFuncao.value; const pessoa = els.filtroPessoa.value.trim(); const proximoISO = getProximoISO();
+      const ativos = escalaAtiva();
+      const base = ativos.filter(e => (mes === 'tudo' || e.data.startsWith(mes)) && contemPessoa(e, pessoa));
+      if(funcao !== 'todas') {
         els.resumoFuncao.hidden = false;
-        const tituloFunc = {
-          oracaoAbertura:'Oração de Abertura',
-          quebraGelo:'Quebra‑Gelo',
-          oferta:'Oferta',
-          lanche:'Lanche',
-          cuidandoCriancas:'Cuidando das Crianças',
-          oracaoDasCriancas:'Oração das Crianças'
-        }[funcao] || funcao;
-        const [yy,mm]=(mes||'').split('-');
-        els.resumoTitulo.innerHTML =
-          `Participantes na função <b>${tituloFunc}</b>${mes!=='tudo'? ` — ${new Date(Number(yy), Number(mm)-1, 1).toLocaleDateString('pt-BR',{month:'long'})}/${yy}`:''}${pessoa? ` — filtrado por "${pessoa}"`:''}`;
+        const tituloFunc = { oracaoAbertura:'Oração de Abertura', quebraGelo:'Quebra‑Gelo', oferta:'Oferta', lanche:'Lanche', cuidandoCriancas:'Cuidando das Crianças', oracaoDasCriancas:'Oração das Crianças' }[funcao] || funcao;
+        const [yy,mm] = (mes || '').split('-');
+        els.resumoTitulo.innerHTML = `Participantes na função <b>${tituloFunc}</b>${mes !== 'tudo' ? ` — ${new Date(Number(yy), Number(mm)-1, 1).toLocaleDateString('pt-BR',{month:'long'})}/${yy}` : ''}${pessoa ? ` — filtrado por "${pessoa}"` : ''}`;
         renderResumoPorFuncao(base, funcao);
-      } else {
-        els.resumoFuncao.hidden = true;
-      }
-
-      const encontros = base.filter(e=>{
-        if(funcao==='todas') return true;
-        const f = e.funcoes;
-        if(funcao==='lanche') return (Array.isArray(f.lanche)?f.lanche:[f.lanche]).filter(Boolean).length>0;
-        return Boolean(f[funcao]);
-      }).sort((a,b)=> a.data.localeCompare(b.data));
-
+      } else { els.resumoFuncao.hidden = true; }
+      const encontros = base.filter(e => { if(funcao === 'todas') return true; const f=e.funcoes; if(funcao === 'lanche') return (Array.isArray(f.lanche)?f.lanche:[f.lanche]).filter(Boolean).length > 0; return Boolean(f[funcao]); }).sort((a,b) => a.data.localeCompare(b.data));
       els.lista.innerHTML = '';
-
-      if(funcao!=='todas' && !pessoa){
+      if(funcao !== 'todas' && !pessoa) { els.vazio.hidden = true; }
+      else if(!encontros.length) { els.vazio.hidden = false; }
+      else {
         els.vazio.hidden = true;
-      } else if(!encontros.length){
-        els.vazio.hidden = false;
-      } else {
-        els.vazio.hidden = true;
-        for(const e of encontros){
-          const { d, dow, dm, y } = fmtDate(e.data);
-          const f = e.funcoes;
-          const lanche = Array.isArray(f.lanche)? f.lanche : (f.lanche? [f.lanche] : []);
-          const card = document.createElement('article');
-          card.className = 'card' + (e.data === proximoISO ? ' next-card' : '');
+        for(const e of encontros) {
+          const { d, dow, dm, y } = fmtDate(e.data); const f = e.funcoes; const lanche = Array.isArray(f.lanche) ? f.lanche : (f.lanche ? [f.lanche] : []);
+          const card = document.createElement('article'); card.className = 'card' + (e.data === proximoISO ? ' next-card' : '');
           card.innerHTML = `
-            <div class="date">
-              <div class="left">
-                <div class="day">${String(d.getDate()).padStart(2,'0')}</div>
-                <div>
-                  <div class="dow">${dow}</div>
-                  <div class="month">${dm}/${y}</div>
-                </div>
-              </div>
-              <div class="type chip">Célula</div>
-            </div>
+            <div class="date"><div class="left"><div class="day">${String(d.getDate()).padStart(2,'0')}</div><div><div class="dow">${dow}</div><div class="month">${dm}/${y}</div></div></div><div class="type chip">Célula</div></div>
             <div class="roles">
               <div class="role"><div class="title">Oração de Abertura</div><div class="chips"><span class="chip">${f.oracaoAbertura || '—'}</span></div></div>
               <div class="role"><div class="title">Quebra‑Gelo</div><div class="chips"><span class="chip">${f.quebraGelo || '—'}</span></div></div>
               <div class="role"><div class="title">Oferta</div><div class="chips"><span class="chip">${f.oferta || '—'}</span></div></div>
-              <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n=>`<span class="chip">${n}</span>`).join('') || '<span class="chip">—</span>'}</div></div>
+              <div class="role"><div class="title">Lanche</div><div class="chips">${lanche.map(n => `<span class="chip">${n}</span>`).join('') || '<span class="chip">—</span>'}</div></div>
               <div class="role"><div class="title">Cuidando das Crianças</div><div class="chips"><span class="chip">${f.cuidandoCriancas || '—'}</span></div></div>
               <div class="role"><div class="title">Oração das Crianças</div><div class="chips"><span class="chip">${f.oracaoDasCriancas || '—'}</span></div></div>
             </div>
-            <div class="foot">
-              <div style="display:flex; gap:8px; flex-wrap:wrap">
-                <button class="btn secondary" data-acao="copiar">Copiar resumo</button>
-                <button class="btn secondary" data-acao="compartilhar">Compartilhar</button>
-              </div>
-              <button class="btn" data-acao="ics">Adicionar ao calendário</button>
-            </div>`;
-          card.querySelector('[data-acao="ics"]').addEventListener('click', ()=> baixarICS(e));
-          card.querySelector('[data-acao="copiar"]').addEventListener('click', ()=> copiarResumo(e));
-          card.querySelector('[data-acao="compartilhar"]').addEventListener('click', async ()=>{
-            const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\\n` + resumoFuncoes(e);
-            if(navigator.share){ try{ await navigator.share({title:'Célula Yeshua', text:texto}); } catch{} }
-            else { copiarResumo(e); }
-          });
+            <div class="foot"><div style="display:flex; gap:8px; flex-wrap:wrap"><button class="btn secondary" data-acao="copiar">Copiar resumo</button><button class="btn secondary" data-acao="compartilhar">Compartilhar</button></div><button class="btn" data-acao="ics">Adicionar ao calendário</button></div>`;
+          card.querySelector('[data-acao="ics"]').addEventListener('click', () => baixarICS(e));
+          card.querySelector('[data-acao="copiar"]').addEventListener('click', () => copiarResumo(e));
+          card.querySelector('[data-acao="compartilhar"]').addEventListener('click', async () => { const texto = `Célula Yeshua — ${dow}, ${dm}/${y}\n` + resumoFuncoes(e); if(navigator.share){ try{ await navigator.share({title:'Célula Yeshua', text:texto}); }catch(_e){} } else { copiarResumo(e); } });
           els.lista.appendChild(card);
         }
       }
-      renderProximoFixo();
-      destacarProximo();
+      renderProximoFixo(); destacarProximo();
     }
 
-    function destacarProximo(){
+    function destacarProximo() {
       const proximoISO = getProximoISO();
-      if(proximoISO){
-        const { d } = fmtDate(proximoISO);
-        const hoje = new Date(); hoje.setHours(0,0,0,0);
-        const alvo = new Date(proximoISO + 'T00:00:00');
-        const dias = Math.round((alvo - hoje) / 86400000);
-        els.proximoTxt.textContent = `${d.toLocaleDateString('pt-BR', {weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})} • ${textoContagem(dias)}`;
+      if(proximoISO) {
+        const { d } = fmtDate(proximoISO); const hoje = new Date(); hoje.setHours(0,0,0,0); const alvo = new Date(proximoISO + 'T00:00:00'); const dias = Math.round((alvo - hoje) / 86400000);
+        els.proximoTxt.textContent = `${d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})} • ${textoContagem(dias)}`;
         els.proximoBadge.hidden = false;
+      } else { els.proximoBadge.hidden = true; els.proximoFixo.hidden = true; }
+    }
+
+    function normalizarCabecalho(s) { return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,''); }
+    function excelDateToISO(n) { const epoch=new Date(Date.UTC(1899,11,30)); const d=new Date(epoch.getTime()+n*86400000); return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`; }
+    function parseStrDate(s) { const str=String(s||'').trim(); const m=str.match(/(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/); if(!m) return null; let [_,a,b,c]=m; a=+a; b=+b; c=String(c).length===2 ? +((+c>50?'19':'20')+c) : +c; let day, mon; if(a>12){day=a;mon=b;} else if(b>12){day=b;mon=a;} else {day=a;mon=b;} return `${c}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`; }
+
+    async function importarExcel(file) {
+      if(!window.XLSX) { alert('Biblioteca XLSX não carregou. Verifique a conexão e tente novamente.'); return; }
+      const buf = await file.arrayBuffer(); const wb = XLSX.read(buf,{type:'array'}); const ws = wb.Sheets[wb.SheetNames[0]]; const rows = XLSX.utils.sheet_to_json(ws,{defval:'',raw:true});
+      if(!rows.length) { alert('Arquivo sem linhas.'); return; }
+      const first = rows[0]; const keys = Object.keys(first); const norm = Object.fromEntries(keys.map(k => [k, normalizarCabecalho(k)])); const map = {};
+      for(const k of keys) { const n = norm[k]; if(['data','date'].includes(n)) map.data=k; if(['oracaodeabertura','oracaoabertura','oracaoinicial'].includes(n)) map.oa=k; if(['quebragelo','quebraogelo','icebreaker'].includes(n)) map.qg=k; if(['oferta','coleta','dizimo','dizimosofertas'].includes(n)) map.of=k; if(['lanche','lanches','coffee','coffeebreak'].includes(n)) map.ln=k; if(['cuidandodascriancas','criancas','kids','infantil'].includes(n)) map.cc=k; if(['oracaodascriancas','oracaocriancas','oracaokids','oracaodascriancas'].includes(n)) map.oc=k; }
+      if(!map.data) { alert('Coluna de Data não encontrada.'); return; }
+      let novos = 0;
+      for(const r of rows) {
+        const vData = r[map.data]; if(vData == null || vData === '') continue;
+        let iso; if(typeof vData === 'number') iso = excelDateToISO(vData); else if(vData instanceof Date) iso = `${vData.getFullYear()}-${String(vData.getMonth()+1).padStart(2,'0')}-${String(vData.getDate()).padStart(2,'0')}`; else iso = parseStrDate(vData) || String(vData).slice(0,10);
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)) continue;
+        const lancheRaw = (r[map.ln] || '').toString().trim();
+        const obj = { data:iso, tipo:'Célula', observacoes:'', funcoes:{ oracaoAbertura:(r[map.oa]||'').toString().trim(), quebraGelo:(r[map.qg]||'').toString().trim(), oferta:(r[map.of]||'').toString().trim(), lanche:(lancheRaw.toLowerCase() === 'colaborativo' ? ['Colaborativo'] : lancheRaw.split(',').map(x => x.trim()).filter(Boolean)), cuidandoCriancas:(r[map.cc]||'').toString().trim(), oracaoDasCriancas:(r[map.oc]||'').toString().trim() } };
+        const idx = escala.findIndex(x => x.data === obj.data); if(idx >= 0) escala[idx] = obj; else { escala.push(obj); novos++; }
+      }
+      escala.sort((a,b) => a.data.localeCompare(b.data)); popularMeses(); popularPessoas(); render(); alert(`${novos} novo(s) encontro(s) importado(s) com sucesso!`);
+    }
+
+    function sortearItem(lista) { return lista[Math.floor(Math.random()*lista.length)]; }
+    function textoSugestao(item, tipo) { if(tipo === 'quebraGelo') return [`Sugestão de quebra-gelo: ${item.titulo}`,`Base bíblica: ${item.base}`,`Objetivo: ${item.objetivo}`,`Como fazer: ${item.como}`,`Tempo estimado: ${item.tempo}`].join('\n'); return [`Sugestão para oração da oferta: ${item.titulo}`,`Base bíblica: ${item.base}`,`Explicação: ${item.explicacao}`,`Direção de oração: ${item.oracao}`].join('\n'); }
+    function renderModal() {
+      const { tipo, item } = modalAtual; if(!item) return;
+      if(tipo === 'quebraGelo') {
+        els.modalTitulo.textContent = '💡 Sugestões de quebra-gelo';
+        els.modalSubtitulo.textContent = 'Inspirações bíblicas para abrir a célula com comunhão, reflexão e propósito.';
+        els.modalConteudo.innerHTML = `<div class="modal-badges"><span class="chip">${item.base}</span><span class="chip">${item.tempo}</span></div><div class="modal-section"><div class="label">Sugestão</div><div><strong>${item.titulo}</strong></div></div><div class="modal-section"><div class="label">Objetivo</div><div>${item.objetivo}</div></div><div class="modal-section"><div class="label">Como fazer</div><div>${item.como}</div></div>`;
       } else {
-        els.proximoBadge.hidden = true;
-        els.proximoFixo.hidden = true;
+        els.modalTitulo.textContent = '🙏 Sugestões para oração da oferta';
+        els.modalSubtitulo.textContent = 'Textos bíblicos e direções simples para ler, explicar e orar no momento da oferta.';
+        els.modalConteudo.innerHTML = `<div class="modal-badges"><span class="chip">${item.base}</span></div><div class="modal-section"><div class="label">Tema</div><div><strong>${item.titulo}</strong></div></div><div class="modal-section"><div class="label">Explicação</div><div>${item.explicacao}</div></div><div class="modal-section"><div class="label">Direção de oração</div><div>${item.oracao}</div></div>`;
       }
     }
+    function abrirModal(tipo) { modalAtual.tipo = tipo; modalAtual.item = sortearItem(tipo === 'quebraGelo' ? sugestoesQuebraGelo : sugestoesOferta); renderModal(); els.modalSugestoes.classList.add('show'); els.modalSugestoes.setAttribute('aria-hidden','false'); }
+    function fecharModal() { els.modalSugestoes.classList.remove('show'); els.modalSugestoes.setAttribute('aria-hidden','true'); }
 
-    function normalizarCabecalho(s){
-      return String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');
-    }
-    function excelDateToISO(n){
-      const epoch = new Date(Date.UTC(1899,11,30));
-      const ms = n*86400000;
-      const d = new Date(epoch.getTime()+ms);
-      const yyyy=d.getUTCFullYear();
-      const mm=String(d.getUTCMonth()+1).padStart(2,'0');
-      const dd=String(d.getUTCDate()).padStart(2,'0');
-      return `${yyyy}-${mm}-${dd}`;
-    }
-    function parseStrDate(s){
-      const str = String(s || '').trim();
-      const m = str.match(/(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{2,4})/);
-      if(!m) return null;
-      let [_,a,b,c] = m;
-      a=+a; b=+b; c=String(c).length===2 ? +((+c>50?'19':'20')+c) : +c;
-      let day, mon;
-      if(a>12){ day=a; mon=b; }
-      else if(b>12){ day=b; mon=a; }
-      else { day=a; mon=b; }
-      return `${c}-${String(mon).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    }
+    ['change','input'].forEach(evt => els.filtroMes.addEventListener(evt, render));
+    ['change','input'].forEach(evt => els.filtroFuncao.addEventListener(evt, render));
+    ['change','input'].forEach(evt => els.filtroPessoa.addEventListener(evt, render));
+    $('#btnLimpar').addEventListener('click', () => { popularMeses(); els.filtroFuncao.value='todas'; els.filtroPessoa.value=''; render(); });
+    $('#btnImprimir').addEventListener('click', () => window.print());
+    els.btnImportar.addEventListener('click', () => els.inpExcel.click());
+    els.inpExcel.addEventListener('change', e => { const f=e.target.files[0]; if(f) importarExcel(f); e.target.value=''; });
 
-    async function importarExcel(file){
-      if(!window.XLSX){ alert('Biblioteca XLSX não carregou. Verifique a conexão e tente novamente.'); return; }
-      const buf = await file.arrayBuffer();
-      const wb  = XLSX.read(buf,{type:'array'});
-      const ws  = wb.Sheets[wb.SheetNames[0]];
-      const rows= XLSX.utils.sheet_to_json(ws,{defval:'',raw:true});
-      if(!rows.length){ alert('Arquivo sem linhas.'); return; }
-
-      const first = rows[0];
-      const keys  = Object.keys(first);
-      const norm  = Object.fromEntries(keys.map(k=>[k, normalizarCabecalho(k)]));
-      const map   = {};
-      for(const k of keys){
-        const n=norm[k];
-        if(['data','date'].includes(n)) map.data=k;
-        if(['oracaodeabertura','oracaoabertura','oracaoinicial'].includes(n)) map.oa=k;
-        if(['quebragelo','quebraogelo','icebreaker'].includes(n)) map.qg=k;
-        if(['oferta','coleta','dizimo','dizimosofertas'].includes(n)) map.of=k;
-        if(['lanche','lanches','coffee','coffeebreak'].includes(n)) map.ln=k;
-        if(['cuidandodascriancas','criancas','kids','infantil'].includes(n)) map.cc=k;
-        if(['oracaodascriancas','oracaocriancas','oracaokids','oracaodascriancas'].includes(n)) map.oc=k;
-      }
-      if(!map.data){ alert('Coluna de Data não encontrada.'); return; }
-
-      let novos=0;
-      for(const r of rows){
-        const vData=r[map.data]; if(vData==null || vData==='') continue;
-        let iso;
-        if(typeof vData==='number') iso = excelDateToISO(vData);
-        else if(vData instanceof Date) {
-          const yyyy=vData.getFullYear();
-          const mm=String(vData.getMonth()+1).padStart(2,'0');
-          const dd=String(vData.getDate()).padStart(2,'0');
-          iso = `${yyyy}-${mm}-${dd}`;
-        } else iso = parseStrDate(vData) || String(vData).slice(0,10);
-        if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(iso)) continue;
-
-        const lancheRaw = (r[map.ln]||'').toString().trim();
-        const obj = {
-          data: iso, tipo:'Célula', observacoes:'',
-          funcoes:{
-            oracaoAbertura: (r[map.oa]||'').toString().trim(),
-            quebraGelo:      (r[map.qg]||'').toString().trim(),
-            oferta:          (r[map.of]||'').toString().trim(),
-            lanche:          lancheRaw.toLowerCase() === 'colaborativo' ? ['Colaborativo'] : lancheRaw.split(',').map(x=>x.trim()).filter(Boolean),
-            cuidandoCriancas:(r[map.cc]||'').toString().trim(),
-            oracaoDasCriancas:(r[map.oc]||'').toString().trim()
-          }
-        };
-        const idx = escala.findIndex(x=>x.data===obj.data);
-        if(idx>=0) escala[idx]=obj; else { escala.push(obj); novos++; }
-      }
-      escala.sort((a,b)=> a.data.localeCompare(b.data));
-      popularMeses(); popularPessoas(); render();
-      alert(`${novos} novo(s) encontro(s) importado(s) com sucesso!`);
-    }
-
-    ['change','input'].forEach(evt=> els.filtroMes.addEventListener(evt, render));
-    ['change','input'].forEach(evt=> els.filtroFuncao.addEventListener(evt, render));
-    ['change','input'].forEach(evt=> els.filtroPessoa.addEventListener(evt, render));
-    $('#btnLimpar').addEventListener('click', ()=>{
-      popularMeses();
-      els.filtroFuncao.value='todas';
-      els.filtroPessoa.value='';
-      render();
-    });
-    $('#btnImprimir').addEventListener('click', ()=> window.print());
-    els.btnImportar.addEventListener('click', ()=> els.inpExcel.click());
-    els.inpExcel.addEventListener('change', (e)=>{ const f=e.target.files[0]; if(f) importarExcel(f); e.target.value=''; });
+    els.btnQuebraGelo.addEventListener('click', () => abrirModal('quebraGelo'));
+    els.btnOfertaIdeias.addEventListener('click', () => abrirModal('oferta'));
+    els.btnFecharModal.addEventListener('click', fecharModal);
+    els.modalSugestoes.addEventListener('click', e => { if(e.target === els.modalSugestoes) fecharModal(); });
+    document.addEventListener('keydown', e => { if(e.key === 'Escape' && els.modalSugestoes.classList.contains('show')) fecharModal(); });
+    els.btnSortearOutra.addEventListener('click', () => { if(!modalAtual.tipo) return; modalAtual.item = sortearItem(modalAtual.tipo === 'quebraGelo' ? sugestoesQuebraGelo : sugestoesOferta); renderModal(); });
+    els.btnCopiarSugestao.addEventListener('click', () => { if(!modalAtual.item) return; const texto = textoSugestao(modalAtual.item, modalAtual.tipo); navigator.clipboard?.writeText(texto).then(() => alert('Conteúdo copiado! ✅')).catch(() => prompt('Copie manualmente:', texto)); });
 
     sortearVerso();
     els.btnTrocarVerso.addEventListener('click', sortearVerso);
-    els.btnEntrar.addEventListener('click', ()=>{ els.intro.classList.add('intro-hidden'); setTimeout(()=> els.intro.remove(), 380); });
-
-    popularMeses();
-    popularPessoas();
-    render();
+    els.btnEntrar.addEventListener('click', () => { els.intro.classList.add('intro-hidden'); setTimeout(() => els.intro.remove(), 380); });
+    popularMeses(); popularPessoas(); render();
   </script>
 </body>
 </html>
